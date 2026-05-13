@@ -49,7 +49,7 @@ export default {
         ink: "#1e1410",
       },
       fontFamily: {
-        display: ["var(--font-display)", "'Big Shoulders Display'", "Impact", "sans-serif"],
+        display: ["var(--font-display)", "'Antonio'", "Impact", "sans-serif"],
         serif: ["var(--font-serif)", "'Cormorant Garamond'", "Georgia", "serif"],
         body: ["var(--font-body)", "system-ui", "sans-serif"],
       },

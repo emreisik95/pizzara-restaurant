@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Big_Shoulders_Display, Cormorant_Garamond, DM_Sans } from "next/font/google";
+import { Antonio, Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const display = Big_Shoulders_Display({
+const display = Antonio({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
