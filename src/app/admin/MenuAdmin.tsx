@@ -1,6 +1,9 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
+
+const EASE = [0.22, 1, 0.36, 1] as const;
 
 type Cat = { slug: string; name: string };
 type Item = {
@@ -43,19 +46,28 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
     <div>
       <div className="flex items-center justify-between mb-5">
         <p className="text-ink/70 text-sm">{items.length} ürün</p>
-        <button
+        <motion.button
           className="pill-cta pill-cta--red text-xs md:text-sm px-5 py-2.5"
           onClick={() => setCreating(true)}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
         >
           + Yeni Ürün
-        </button>
+        </motion.button>
       </div>
 
       <ul className="grid gap-3">
-        {items.map((it) => (
-          <li
+        <AnimatePresence initial={false}>
+        {items.map((it, idx) => (
+          <motion.li
+            layout
             key={it.id}
             className={`rounded-2xl bg-crema p-4 shadow-[0_18px_40px_-28px_rgba(20,12,8,0.4)] ring-1 ring-ink/5 ${!it.is_active ? "opacity-60" : ""}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: it.is_active ? 1 : 0.6, y: 0 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.18 } }}
+            transition={{ duration: 0.4, delay: Math.min(idx * 0.03, 0.25), ease: EASE }}
+            whileHover={{ y: -2 }}
           >
             <div className="flex items-center gap-4">
               <div className="h-14 w-14 rounded-xl bg-bosco/15 ring-1 ring-ink/5 overflow-hidden shrink-0">
@@ -99,10 +111,12 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
                 </button>
               </div>
             </div>
-          </li>
+          </motion.li>
         ))}
+        </AnimatePresence>
       </ul>
 
+      <AnimatePresence>
       {(editing || creating) && (
         <ItemDialog
           categories={categories}
@@ -118,6 +132,7 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
           }}
         />
       )}
+      </AnimatePresence>
       {pending && <p className="text-ink/50 text-xs mt-3">Güncelleniyor...</p>}
     </div>
   );
@@ -182,13 +197,23 @@ function ItemDialog({
   }
 
   return (
-    <div
+    <motion.div
       role="dialog"
       aria-modal="true"
       className="fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-bosco-900/60 backdrop-blur-sm p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
     >
-      <div className="bg-crema text-ink rounded-3xl w-full max-w-md p-6 md:p-8 shadow-card">
+      <motion.div
+        className="bg-crema text-ink rounded-3xl w-full max-w-md p-6 md:p-8 shadow-card"
+        initial={{ opacity: 0, y: 30, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 20, scale: 0.97, transition: { duration: 0.2 } }}
+        transition={{ duration: 0.4, ease: EASE }}
+      >
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-2xl md:text-3xl uppercase text-rosso">
             {item ? "Ürün Düzenle" : "Yeni Ürün"}
@@ -265,17 +290,19 @@ function ItemDialog({
             >
               İptal
             </button>
-            <button
+            <motion.button
               disabled={busy}
               className="pill-cta pill-cta--red flex-1 justify-center disabled:opacity-60"
               type="submit"
+              whileHover={busy ? undefined : { scale: 1.02 }}
+              whileTap={busy ? undefined : { scale: 0.97 }}
             >
               {busy ? "..." : "Kaydet"}
-            </button>
+            </motion.button>
           </div>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { tl } from "@/lib/format";
 import { Sparkle } from "./Sparkle";
 import { PlateImage } from "./PlateImage";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 
 export type CategoryDTO = { slug: string; name: string };
 export type ItemDTO = {
@@ -17,6 +18,13 @@ export type ItemDTO = {
 const CARD_TONES = ["red", "green", "cream"] as const;
 type Tone = (typeof CARD_TONES)[number];
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const headVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+
 export function MenuSection({
   categories,
   items,
@@ -25,6 +33,7 @@ export function MenuSection({
   items: ItemDTO[];
 }) {
   const [active, setActive] = useState("tumu");
+  const reduce = useReducedMotion();
   const filtered = useMemo(
     () => (active === "tumu" ? items : items.filter((i) => i.category_slug === active)),
     [active, items]
@@ -33,7 +42,13 @@ export function MenuSection({
   return (
     <section id="menu" className="relative bg-crema-light text-ink py-20 md:py-28 grain">
       <div className="container-wrap">
-        <div className="text-center fade-up">
+        <motion.div
+          className="text-center"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={headVariants}
+        >
           <div className="ornament-line text-rosso mb-4">
             <Sparkle size={16} className="text-rosso" />
           </div>
@@ -41,30 +56,61 @@ export function MenuSection({
           <p className="font-serif italic text-bosco-700 mt-2 text-lg md:text-xl">
             En sevilen lezzetlerimiz
           </p>
-        </div>
+        </motion.div>
 
-        <div className="mt-10 flex justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5">
+        <motion.div
+          className="mt-10 flex justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5"
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+          variants={{
+            hidden: {},
+            show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+          }}
+        >
           {categories.map((c) => {
             const on = active === c.slug;
             return (
-              <button
+              <motion.button
                 key={c.slug}
                 onClick={() => setActive(c.slug)}
-                className={`tab-pill shrink-0 ${on ? "tab-pill--active" : "tab-pill--idle"}`}
+                className={`tab-pill shrink-0 relative ${on ? "tab-pill--active" : "tab-pill--idle"}`}
+                variants={{
+                  hidden: { opacity: 0, y: 12 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
+                }}
+                whileHover={reduce || on ? undefined : { y: -2 }}
+                whileTap={reduce ? undefined : { scale: 0.96 }}
               >
-                {c.name}
-              </button>
+                {on && (
+                  <motion.span
+                    layoutId="tab-pill-bg"
+                    className="absolute inset-0 rounded-full bg-rosso -z-10"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                <span className="relative">{c.name}</span>
+              </motion.button>
             );
           })}
-        </div>
+        </motion.div>
 
         <ul className="mt-10 md:mt-14 grid gap-5 md:gap-6 max-w-3xl mx-auto">
-          {filtered.map((item, idx) => {
-            const tone: Tone = CARD_TONES[idx % CARD_TONES.length];
-            return <MenuCard key={item.id} item={item} tone={tone} />;
-          })}
+          <AnimatePresence mode="popLayout">
+            {filtered.map((item, idx) => {
+              const tone: Tone = CARD_TONES[idx % CARD_TONES.length];
+              return <MenuCard key={item.id} item={item} tone={tone} idx={idx} reduce={reduce} />;
+            })}
+          </AnimatePresence>
           {filtered.length === 0 && (
-            <li className="text-center text-ink/60 py-10">Bu kategoride ürün yok.</li>
+            <motion.li
+              className="text-center text-ink/60 py-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4 }}
+            >
+              Bu kategoride ürün yok.
+            </motion.li>
           )}
         </ul>
       </div>
@@ -72,7 +118,17 @@ export function MenuSection({
   );
 }
 
-function MenuCard({ item, tone }: { item: ItemDTO; tone: Tone }) {
+function MenuCard({
+  item,
+  tone,
+  idx,
+  reduce,
+}: {
+  item: ItemDTO;
+  tone: Tone;
+  idx: number;
+  reduce: boolean | null;
+}) {
   const klass =
     tone === "red"
       ? "menu-card menu-card--red"
@@ -80,11 +136,22 @@ function MenuCard({ item, tone }: { item: ItemDTO; tone: Tone }) {
       ? "menu-card menu-card--green"
       : "menu-card menu-card--cream";
 
-  const accentColor =
-    tone === "cream" ? "text-rosso" : "text-crema";
+  const accentColor = tone === "cream" ? "text-rosso" : "text-crema";
 
   return (
-    <li className={`${klass} fade-up`}>
+    <motion.li
+      layout
+      className={klass}
+      initial={{ opacity: 0, y: 18, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: 8, scale: 0.96, transition: { duration: 0.18 } }}
+      transition={{
+        duration: 0.45,
+        delay: Math.min(idx * 0.05, 0.35),
+        ease: EASE,
+      }}
+      whileHover={reduce ? undefined : { y: -4, scale: 1.005 }}
+    >
       <div className="pl-1 md:pl-2">
         <PlateImage src={item.image} alt={item.name} shape="round" className="plate" />
       </div>
@@ -99,13 +166,18 @@ function MenuCard({ item, tone }: { item: ItemDTO; tone: Tone }) {
           ₺{tl(item.price)}
         </p>
 
-        <span aria-hidden className={`absolute -right-2 top-1 inline-flex items-center justify-center h-6 w-6 ${accentColor} opacity-80`}>
+        <motion.span
+          aria-hidden
+          className={`absolute -right-2 top-1 inline-flex items-center justify-center h-6 w-6 ${accentColor} opacity-80`}
+          whileHover={reduce ? undefined : { rotate: 90, scale: 1.15 }}
+          transition={{ type: "spring", stiffness: 400, damping: 18 }}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
             <path d="M12 5v14M5 12h14" />
           </svg>
-        </span>
+        </motion.span>
         <Sparkle size={10} className={`absolute -right-2 bottom-5 ${accentColor} opacity-70`} rotate={30} />
       </div>
-    </li>
+    </motion.li>
   );
 }

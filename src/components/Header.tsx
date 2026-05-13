@@ -1,21 +1,47 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "motion/react";
+
+const NAV = [
+  ["#hero", "Anasayfa"],
+  ["#menu", "Menü"],
+  ["#reservation", "Rezervasyon"],
+  ["#contact", "İletişim"],
+] as const;
 
 export function Header({ brand }: { brand: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-50 bg-rosso text-crema-200 grain">
+    <motion.header
+      className="sticky top-0 z-50 bg-rosso text-crema-200 grain"
+      initial={{ y: -24, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+    >
       <div className="container-wrap relative z-10 flex items-center justify-between py-4 md:py-5">
-        <Link href="/" className="font-display tracking-[0.04em] text-base md:text-lg uppercase text-crema">
+        <Link
+          href="/"
+          className="font-display tracking-[0.04em] text-base md:text-lg uppercase text-crema"
+        >
           <span className="md:hidden">{brand.replace(/\s+/g, "")}</span>
-          <span className="hidden md:inline-flex items-center gap-2"><Mark className="text-crema" />{brand}</span>
+          <span className="hidden md:inline-flex items-center gap-2">
+            <Mark className="text-crema" />
+            {brand}
+          </span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-[11px] uppercase tracking-[0.28em] font-semibold">
-          <a href="#hero" className="hover:opacity-80">Anasayfa</a>
-          <a href="#menu" className="hover:opacity-80">Menü</a>
-          <a href="#reservation" className="hover:opacity-80">Rezervasyon</a>
-          <a href="#contact" className="hover:opacity-80">İletişim</a>
+          {NAV.map(([href, label]) => (
+            <motion.a
+              key={href}
+              href={href}
+              className="relative hover:opacity-90"
+              whileHover={{ y: -2 }}
+              transition={{ duration: 0.2 }}
+            >
+              {label}
+            </motion.a>
+          ))}
         </nav>
         <button
           aria-label={open ? "Menüyü kapat" : "Menüyü aç"}
@@ -28,26 +54,29 @@ export function Header({ brand }: { brand: string }) {
           </svg>
         </button>
       </div>
-      {open && (
-        <nav className="md:hidden container-wrap pb-4 grid gap-1 text-sm uppercase tracking-[0.22em] font-semibold">
-          {[
-            ["#hero", "Anasayfa"],
-            ["#menu", "Menü"],
-            ["#reservation", "Rezervasyon"],
-            ["#contact", "İletişim"],
-          ].map(([href, label]) => (
-            <a
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              className="rounded-lg px-3 py-3 hover:bg-crema/10"
-            >
-              {label}
-            </a>
-          ))}
-        </nav>
-      )}
-    </header>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.nav
+            className="md:hidden container-wrap pb-4 grid gap-1 text-sm uppercase tracking-[0.22em] font-semibold overflow-hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {NAV.map(([href, label]) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                className="rounded-lg px-3 py-3 hover:bg-crema/10 transition-colors"
+              >
+                {label}
+              </a>
+            ))}
+          </motion.nav>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
 

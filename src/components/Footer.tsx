@@ -1,4 +1,6 @@
+"use client";
 import { Sparkle } from "./Sparkle";
+import { motion, type Variants } from "motion/react";
 
 type Props = {
   brand: string;
@@ -8,43 +10,64 @@ type Props = {
   hours: string;
 };
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const stagger: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
+};
+
 export function Footer({ brand, address, phone, instagram, hours }: Props) {
   return (
     <footer id="contact" className="relative bg-bosco text-crema grain">
-      <div className="container-wrap relative z-10 grid md:grid-cols-2 gap-10 py-14 md:py-20">
+      <motion.div
+        className="container-wrap relative z-10 grid md:grid-cols-2 gap-10 py-14 md:py-20"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-40px" }}
+        variants={stagger}
+      >
         <div>
-          <p className="font-display tracking-wider2 uppercase text-xl md:text-2xl">{brand}</p>
-          <ul className="mt-5 grid gap-3 text-[15px] text-crema/90">
-            <li className="flex items-start gap-3">
+          <motion.p className="font-display tracking-wider2 uppercase text-xl md:text-2xl" variants={fadeUp}>
+            {brand}
+          </motion.p>
+          <motion.ul className="mt-5 grid gap-3 text-[15px] text-crema/90" variants={stagger}>
+            <motion.li className="flex items-start gap-3" variants={fadeUp}>
               <Icon name="pin" />
               <span>{address}</span>
-            </li>
-            <li className="flex items-start gap-3">
+            </motion.li>
+            <motion.li className="flex items-start gap-3" variants={fadeUp}>
               <Icon name="phone" />
-              <a href={`tel:${phone}`} className="hover:text-crema">{phone}</a>
-            </li>
-            <li className="flex items-start gap-3">
+              <a href={`tel:${phone}`} className="hover:text-crema transition-colors">
+                {phone}
+              </a>
+            </motion.li>
+            <motion.li className="flex items-start gap-3" variants={fadeUp}>
               <Icon name="ig" />
               <a
                 href={`https://instagram.com/${instagram.replace("@", "")}`}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-crema"
+                className="hover:text-crema transition-colors"
               >
                 {instagram}
               </a>
-            </li>
-          </ul>
+            </motion.li>
+          </motion.ul>
         </div>
 
-        <div className="md:text-right">
+        <motion.div className="md:text-right" variants={fadeUp}>
           <div className="md:inline-flex md:items-center md:gap-3 md:justify-end md:flex-row-reverse">
             <Sparkle size={14} className="text-crema/80 md:inline-block hidden" />
             <p className="section-eyebrow">Çalışma Saatleri</p>
           </div>
           <p className="font-serif italic mt-2 text-xl md:text-2xl">{hours}</p>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <div className="container-wrap relative z-10 border-t border-crema/15 py-5 text-xs flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-crema/70">
         <p>© {new Date().getFullYear()} {brand}. Tüm hakları saklıdır.</p>
