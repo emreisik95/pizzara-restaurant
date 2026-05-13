@@ -3,8 +3,8 @@ RUN apk add --no-cache python3 make g++ libc6-compat
 WORKDIR /app
 
 FROM base AS deps
-COPY package.json package-lock.json* ./
-RUN npm ci --no-audit --no-fund
+COPY package.json package-lock.json* .npmrc* ./
+RUN npm ci --no-audit --no-fund --legacy-peer-deps
 
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
