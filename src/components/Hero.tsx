@@ -13,12 +13,12 @@ export function Hero({ eyebrow, title, subtitle, image }: Props) {
   return (
     <section id="hero" className="relative bg-bosco text-crema overflow-hidden grain">
       {/* Pasta image — bleeds off the right edge */}
-      <div className="absolute inset-y-0 right-0 w-[68%] md:w-[58%] z-0 pointer-events-none">
+      <div className="absolute inset-y-0 right-0 w-[78%] md:w-[60%] z-0 pointer-events-none">
         <PlateImage
           src={image}
           alt="Pizzara signature pasta"
           shape="round"
-          className="absolute top-1/2 -translate-y-1/2 right-[-30%] md:right-[-18%] w-[140%] md:w-[110%] aspect-square ring-0 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.55)]"
+          className="absolute top-1/2 -translate-y-1/2 right-[-22%] md:right-[-14%] w-[125%] md:w-[110%] aspect-square ring-0 shadow-[0_50px_100px_-32px_rgba(0,0,0,0.7)]"
         />
       </div>
 
