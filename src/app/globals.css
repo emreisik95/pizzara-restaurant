@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-bg: #8b1e1b;
+  --brand-deep: #581210;
+  --cream: #f4e9d8;
+  --gold: #d6a55a;
+}
+
+html, body { background: var(--brand-bg); color: var(--cream); }
+body { font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+
+.font-display { font-family: var(--font-display), "Cormorant Garamond", Georgia, serif; letter-spacing: 0.01em; }
+
+@layer components {
+  .container-app { @apply mx-auto w-full max-w-md px-5; }
+  .btn-primary { @apply inline-flex items-center justify-center rounded-full bg-cream text-brand-900 font-semibold px-6 py-3 text-sm tracking-wide shadow-card transition active:scale-[0.98] hover:bg-white; }
+  .btn-ghost { @apply inline-flex items-center justify-center rounded-full border border-cream/60 text-cream font-semibold px-6 py-3 text-sm tracking-wide transition hover:bg-cream/10; }
+  .pill { @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-medium tracking-[0.18em] uppercase; }
+  .card-menu { @apply relative overflow-hidden rounded-2xl bg-brand-900/60 ring-1 ring-cream/10 shadow-card; }
+  .divider-ornament { @apply flex items-center justify-center gap-3 text-cream/70; }
+  .divider-ornament::before, .divider-ornament::after { content: ""; @apply h-px w-16 bg-cream/30; }
+}
+
+.bg-paper {
+  background-image: radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.06), transparent 60%),
+                    radial-gradient(800px 400px at 100% 30%, rgba(0,0,0,0.25), transparent 70%),
+                    linear-gradient(180deg, #8b1e1b 0%, #6f1815 40%, #581210 100%);
+}
+
+.tab-active { background: var(--cream); color: #581210; }
+
+/* gentle ornamental scroll */
+.fade-in { animation: fadeIn 0.6s ease both; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* hide scrollbars for category tabs */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
