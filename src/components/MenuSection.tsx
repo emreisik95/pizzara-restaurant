@@ -80,27 +80,31 @@ function MenuCard({ item, tone }: { item: ItemDTO; tone: Tone }) {
       ? "menu-card menu-card--green"
       : "menu-card menu-card--cream";
 
-  const sparkleColor =
+  const accentColor =
     tone === "cream" ? "text-rosso" : "text-crema";
 
   return (
     <li className={`${klass} fade-up`}>
       <div className="pl-1 md:pl-2">
-        <PlateImage src={item.image} alt={item.name} shape="round" className="plate" label="Yükle" />
+        <PlateImage src={item.image} alt={item.name} shape="round" className="plate" />
       </div>
       <div className="min-w-0 py-2 md:py-3 pr-2 relative">
-        <h3 className="font-display uppercase text-[clamp(1.4rem,4.6vw,2.2rem)] leading-tight tracking-tightest">
+        <h3 className="font-display uppercase text-[clamp(1.3rem,4.2vw,2rem)] leading-[1.04] tracking-[0.005em]">
           {item.name}
         </h3>
-        <p className="mt-1 md:mt-2 text-sm md:text-base leading-snug opacity-90 line-clamp-2 max-w-[42ch]">
+        <p className="mt-1 md:mt-2 text-[13px] md:text-sm leading-snug opacity-90 line-clamp-2 max-w-[42ch]">
           {item.description}
         </p>
         <p className="mt-2 md:mt-3 font-display text-2xl md:text-3xl tracking-tight">
           ₺{tl(item.price)}
         </p>
 
-        <Sparkle size={12} className={`absolute -right-1 top-2 ${sparkleColor}`} />
-        <Sparkle size={10} className={`absolute -right-2 bottom-4 ${sparkleColor}`} rotate={30} />
+        <span aria-hidden className={`absolute -right-2 top-1 inline-flex items-center justify-center h-6 w-6 ${accentColor} opacity-80`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        </span>
+        <Sparkle size={10} className={`absolute -right-2 bottom-5 ${accentColor} opacity-70`} rotate={30} />
       </div>
     </li>
   );
