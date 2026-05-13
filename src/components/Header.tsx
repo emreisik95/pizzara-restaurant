@@ -7,9 +7,9 @@ export function Header({ brand }: { brand: string }) {
   return (
     <header className="sticky top-0 z-50 bg-rosso text-crema-200 grain">
       <div className="container-wrap relative z-10 flex items-center justify-between py-4 md:py-5">
-        <Link href="/" className="flex items-center gap-2 font-display tracking-wider2 text-base md:text-lg uppercase">
-          <Mark className="text-crema" />
-          <span>{brand}</span>
+        <Link href="/" className="font-display tracking-[0.04em] text-base md:text-lg uppercase text-crema">
+          <span className="md:hidden">{brand.replace(/\s+/g, "")}</span>
+          <span className="hidden md:inline-flex items-center gap-2"><Mark className="text-crema" />{brand}</span>
         </Link>
         <nav className="hidden md:flex items-center gap-7 text-[11px] uppercase tracking-[0.28em] font-semibold">
           <a href="#hero" className="hover:opacity-80">Anasayfa</a>

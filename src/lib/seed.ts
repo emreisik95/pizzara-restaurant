@@ -90,7 +90,7 @@ export function ensureSeed() {
   setSetting("hero_title", "İYİ MALZEME\nGERÇEK LEZZET");
   setSetting(
     "hero_subtitle",
-    "Taze malzeme, ustaca dokunuş. Her tabakta gerçek İtalyan ruhu."
+    "Taze malzemeler, ustaca dokunuşlar. Her tabakta gerçek İtalyan ruhu."
   );
   setSetting("hero_image", "/placeholder/hero.jpg");
   setSetting("address", "Bağdat Cad. No:172, Kadıköy / İstanbul");

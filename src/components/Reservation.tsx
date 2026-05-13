@@ -127,19 +127,32 @@ function Field({
 function TableArt() {
   return (
     <div className="relative h-48 md:h-64 fade-up text-crema/85">
-      <svg viewBox="0 0 320 160" className="absolute inset-0 h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d="M40 130 H280" />
-        <path d="M82 130 V72 H238 V130" />
-        <circle cx="82" cy="64" r="10" />
-        <circle cx="238" cy="64" r="10" />
-        <path d="M82 74 V60 M238 74 V60" />
-        <path d="M160 78 V130" />
-        <path d="M140 130 H180" />
-        <circle cx="160" cy="56" r="6" />
-        <path d="M155 50 q5 -8 10 0" />
+      <svg viewBox="0 0 320 180" className="absolute inset-0 h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        {/* floor line */}
+        <path d="M20 150 H300" />
+        {/* table top + leg */}
+        <path d="M90 110 H230" />
+        <path d="M160 110 V150" />
+        <path d="M140 150 H180" />
+        {/* vase on table */}
+        <ellipse cx="160" cy="108" rx="9" ry="3" />
+        <path d="M155 108 v-10 q5 -4 10 0 v10" />
+        {/* tiny flower */}
+        <circle cx="160" cy="92" r="3.2" />
+        {/* left chair */}
+        <path d="M70 150 V90" />
+        <circle cx="70" cy="84" r="8" />
+        <path d="M70 92 V108" />
+        <path d="M62 110 H78" />
+        {/* right chair */}
+        <path d="M250 150 V90" />
+        <circle cx="250" cy="84" r="8" />
+        <path d="M250 92 V108" />
+        <path d="M242 110 H258" />
       </svg>
       <Sparkle size={14} className="absolute top-2 right-10 text-crema" />
       <Sparkle size={10} className="absolute bottom-4 left-8 text-crema" rotate={30} />
+      <Sparkle size={12} className="absolute top-10 left-[42%] text-crema/80" rotate={20} />
     </div>
   );
 }
