@@ -22,15 +22,15 @@ export function ReservationActions({ id, status }: { id: number; status: string 
   }
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 items-center">
       {status !== "confirmed" && (
-        <button onClick={() => update("confirmed")} className="rounded px-2 py-1 text-xs bg-emerald-500/30 hover:bg-emerald-500/50">Onayla</button>
+        <button onClick={() => update("confirmed")} className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-bosco/15 text-bosco-700 hover:bg-bosco/25">Onayla</button>
       )}
       {status !== "cancelled" && (
-        <button onClick={() => update("cancelled")} className="rounded px-2 py-1 text-xs bg-cream/10 hover:bg-cream/20">İptal</button>
+        <button onClick={() => update("cancelled")} className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-ink/10 hover:bg-ink/15">İptal</button>
       )}
-      <button onClick={remove} className="rounded px-2 py-1 text-xs bg-red-500/30 hover:bg-red-500/50">Sil</button>
-      {pending && <span className="text-xs text-cream/60">...</span>}
+      <button onClick={remove} className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-rosso/15 text-rosso-700 hover:bg-rosso/25">Sil</button>
+      {pending && <span className="text-xs text-ink/50">...</span>}
     </div>
   );
 }

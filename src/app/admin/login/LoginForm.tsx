@@ -25,7 +25,7 @@ export function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="mt-6 grid gap-3">
       <label className="block">
-        <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">
+        <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">
           Şifre
         </span>
         <input
@@ -33,13 +33,17 @@ export function LoginForm() {
           type="password"
           required
           autoFocus
-          className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2.5 text-sm outline-none focus:border-cream/50"
+          className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-3 text-base outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
         />
       </label>
-      <button disabled={busy} className="btn-primary mt-2 disabled:opacity-60" type="submit">
-        {busy ? "Giriş..." : "GİRİŞ YAP"}
+      <button
+        disabled={busy}
+        className="pill-cta pill-cta--red mt-2 w-full justify-center disabled:opacity-60"
+        type="submit"
+      >
+        {busy ? "Giriş..." : "Giriş Yap"}
       </button>
-      {err && <p className="text-amber-200 text-sm text-center">{err}</p>}
+      {err && <p className="text-rosso text-sm text-center">{err}</p>}
     </form>
   );
 }

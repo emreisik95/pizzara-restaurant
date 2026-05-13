@@ -19,7 +19,8 @@ export default function SettingsPage() {
   for (const [k] of KEYS) values[k] = getSetting(k, "");
   return (
     <div>
-      <h1 className="font-display text-3xl mb-4">Site Ayarları</h1>
+      <h1 className="font-display text-3xl md:text-4xl uppercase text-rosso mb-1">Site Ayarları</h1>
+      <p className="font-serif italic text-bosco-700 mb-6">Hero, iletişim ve çalışma saatleri buradan güncellenir.</p>
       <SettingsForm initial={values} fields={KEYS as unknown as [string, string, string][]} />
     </div>
   );

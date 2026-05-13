@@ -10,7 +10,8 @@ export default function AdminHome() {
   const items = listMenu(false);
   return (
     <div>
-      <h1 className="font-display text-3xl mb-4">Menü Yönetimi</h1>
+      <h1 className="font-display text-3xl md:text-4xl uppercase text-rosso mb-1">Menü Yönetimi</h1>
+      <p className="font-serif italic text-bosco-700 mb-6">Ürünleri ekle, düzenle, kategoriler arasında sırala.</p>
       <MenuAdmin
         categories={cats.map((c) => ({ slug: c.slug, name: c.name }))}
         items={items.map((i) => ({

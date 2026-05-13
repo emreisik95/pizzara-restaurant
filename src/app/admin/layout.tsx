@@ -14,26 +14,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!session && !isLogin) redirect("/admin/login");
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-crema-light text-ink">
       {!isLogin && session ? (
-        <header className="border-b border-cream/10 bg-brand-950/60">
-          <div className="mx-auto max-w-4xl px-5 py-3 flex items-center justify-between">
-            <Link href="/admin" className="font-display tracking-[0.2em] uppercase text-sm">
+        <header className="bg-rosso text-crema grain">
+          <div className="relative z-10 mx-auto max-w-5xl px-5 py-4 flex flex-wrap items-center justify-between gap-3">
+            <Link href="/admin" className="font-display tracking-[0.18em] uppercase text-base md:text-lg">
               Pizzara · Admin
             </Link>
-            <nav className="flex items-center gap-2 text-xs">
-              <Link className="rounded px-3 py-1.5 hover:bg-cream/10" href="/admin">Menü</Link>
-              <Link className="rounded px-3 py-1.5 hover:bg-cream/10" href="/admin/reservations">Rezervasyon</Link>
-              <Link className="rounded px-3 py-1.5 hover:bg-cream/10" href="/admin/settings">Ayarlar</Link>
-              <Link className="rounded px-3 py-1.5 hover:bg-cream/10 underline" href="/" target="_blank">Site</Link>
+            <nav className="flex items-center gap-1 text-[11px] uppercase tracking-[0.22em] font-semibold">
+              <Link className="rounded-full px-3 py-1.5 hover:bg-crema/10" href="/admin">Menü</Link>
+              <Link className="rounded-full px-3 py-1.5 hover:bg-crema/10" href="/admin/reservations">Rezervasyon</Link>
+              <Link className="rounded-full px-3 py-1.5 hover:bg-crema/10" href="/admin/settings">Ayarlar</Link>
+              <Link className="rounded-full px-3 py-1.5 hover:bg-crema/10" href="/" target="_blank">Site</Link>
               <form action="/api/admin/logout" method="post">
-                <button className="rounded px-3 py-1.5 bg-cream/10 hover:bg-cream/20">Çıkış</button>
+                <button className="rounded-full px-3 py-1.5 bg-crema/15 hover:bg-crema/25">Çıkış</button>
               </form>
             </nav>
           </div>
         </header>
       ) : null}
-      <main className="mx-auto max-w-4xl px-5 py-6">{children}</main>
+      <main className="mx-auto max-w-5xl px-5 py-8">{children}</main>
     </div>
   );
 }

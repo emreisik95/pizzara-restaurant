@@ -44,16 +44,18 @@ export function SettingsForm({
   }
 
   return (
-    <div className="grid gap-4 max-w-xl">
+    <div className="grid gap-4 max-w-xl bg-crema rounded-3xl p-6 md:p-8 shadow-[0_18px_40px_-28px_rgba(20,12,8,0.4)] ring-1 ring-ink/5">
       {fields.map(([key, label, type]) => (
         <label key={key} className="block">
-          <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">{label}</span>
+          <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">
+            {label}
+          </span>
           {type === "textarea" ? (
             <textarea
               rows={3}
               value={values[key] || ""}
               onChange={(e) => set(key, e.target.value)}
-              className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2 text-sm outline-none focus:border-cream/50"
+              className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-2.5 text-sm outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
             />
           ) : type === "image" ? (
             <div>
@@ -64,12 +66,12 @@ export function SettingsForm({
                   const f = e.target.files?.[0];
                   if (f) uploadImage(key, f);
                 }}
-                className="text-xs"
+                className="text-xs text-ink/70"
               />
               {values[key] && (
                 <div className="mt-2 flex items-center gap-3">
-                  <img src={values[key]} alt="" className="h-16 w-16 rounded-lg object-cover" />
-                  <code className="text-xs text-cream/70 break-all">{values[key]}</code>
+                  <img src={values[key]} alt="" className="h-16 w-16 rounded-lg object-cover ring-1 ring-ink/10" />
+                  <code className="text-xs text-ink/60 break-all">{values[key]}</code>
                 </div>
               )}
             </div>
@@ -77,16 +79,20 @@ export function SettingsForm({
             <input
               value={values[key] || ""}
               onChange={(e) => set(key, e.target.value)}
-              className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2.5 text-sm outline-none focus:border-cream/50"
+              className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-3 text-base outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
             />
           )}
         </label>
       ))}
-      <div className="flex items-center gap-3">
-        <button disabled={busy} onClick={save} className="btn-primary disabled:opacity-60">
+      <div className="flex items-center gap-3 mt-2">
+        <button
+          disabled={busy}
+          onClick={save}
+          className="pill-cta pill-cta--red disabled:opacity-60"
+        >
           {busy ? "..." : "Kaydet"}
         </button>
-        {msg && <span className="text-cream/70 text-sm">{msg}</span>}
+        {msg && <span className="text-bosco-700 text-sm">{msg}</span>}
       </div>
     </div>
   );

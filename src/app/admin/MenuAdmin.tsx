@@ -41,9 +41,12 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-cream/70 text-sm">{items.length} ürün</p>
-        <button className="btn-primary" onClick={() => setCreating(true)}>
+      <div className="flex items-center justify-between mb-5">
+        <p className="text-ink/70 text-sm">{items.length} ürün</p>
+        <button
+          className="pill-cta pill-cta--red text-xs md:text-sm px-5 py-2.5"
+          onClick={() => setCreating(true)}
+        >
           + Yeni Ürün
         </button>
       </div>
@@ -52,10 +55,10 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
         {items.map((it) => (
           <li
             key={it.id}
-            className={`card-menu p-4 ${!it.is_active ? "opacity-60" : ""}`}
+            className={`rounded-2xl bg-crema p-4 shadow-[0_18px_40px_-28px_rgba(20,12,8,0.4)] ring-1 ring-ink/5 ${!it.is_active ? "opacity-60" : ""}`}
           >
             <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-lg bg-brand-700 ring-1 ring-cream/15 overflow-hidden">
+              <div className="h-14 w-14 rounded-xl bg-bosco/15 ring-1 ring-ink/5 overflow-hidden shrink-0">
                 {it.image && (
                   <img
                     src={it.image}
@@ -66,31 +69,31 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold">{it.name}</h3>
-                  <span className="text-[10px] tracking-widest uppercase bg-cream/10 px-2 py-0.5 rounded">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-display uppercase tracking-tight text-lg">{it.name}</h3>
+                  <span className="text-[10px] tracking-[0.22em] uppercase bg-bosco/10 text-bosco-700 px-2 py-0.5 rounded-full font-semibold">
                     {categories.find((c) => c.slug === it.category_slug)?.name ?? it.category_slug}
                   </span>
                 </div>
-                <p className="text-cream/70 text-xs line-clamp-1">{it.description}</p>
+                <p className="text-ink/70 text-xs line-clamp-1 mt-0.5">{it.description}</p>
               </div>
-              <p className="font-display text-lg text-gold">₺{it.price}</p>
-              <div className="flex gap-1">
+              <p className="font-display text-xl text-rosso shrink-0">₺{it.price}</p>
+              <div className="flex gap-1 shrink-0">
                 <button
                   onClick={() => toggle(it)}
-                  className="rounded px-2 py-1 text-xs bg-cream/10 hover:bg-cream/20"
+                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-bosco/10 text-bosco-700 hover:bg-bosco/20"
                 >
                   {it.is_active ? "Gizle" : "Göster"}
                 </button>
                 <button
                   onClick={() => setEditing(it)}
-                  className="rounded px-2 py-1 text-xs bg-cream/10 hover:bg-cream/20"
+                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-ink/10 hover:bg-ink/15"
                 >
                   Düzenle
                 </button>
                 <button
                   onClick={() => remove(it.id)}
-                  className="rounded px-2 py-1 text-xs bg-red-500/30 hover:bg-red-500/50"
+                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-rosso/15 text-rosso-700 hover:bg-rosso/25"
                 >
                   Sil
                 </button>
@@ -115,7 +118,7 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
           }}
         />
       )}
-      {pending && <p className="text-cream/60 text-xs mt-3">Güncelleniyor...</p>}
+      {pending && <p className="text-ink/50 text-xs mt-3">Güncelleniyor...</p>}
     </div>
   );
 }
@@ -179,28 +182,46 @@ function ItemDialog({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-      <div className="bg-brand-900 rounded-2xl w-full max-w-md p-5 ring-1 ring-cream/20">
-        <h2 className="font-display text-2xl mb-4">{item ? "Ürün Düzenle" : "Yeni Ürün"}</h2>
+    <div
+      role="dialog"
+      aria-modal="true"
+      className="fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-bosco-900/60 backdrop-blur-sm p-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="bg-crema text-ink rounded-3xl w-full max-w-md p-6 md:p-8 shadow-card">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-2xl md:text-3xl uppercase text-rosso">
+            {item ? "Ürün Düzenle" : "Yeni Ürün"}
+          </h2>
+          <button
+            onClick={onClose}
+            aria-label="Kapat"
+            className="h-9 w-9 rounded-full hover:bg-ink/10 inline-flex items-center justify-center"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
         <form onSubmit={onSubmit} className="grid gap-3">
           <Field name="name" label="Ad" defaultValue={item?.name} required />
           <label className="block">
-            <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">Açıklama</span>
+            <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">Açıklama</span>
             <textarea
               name="description"
               rows={3}
               defaultValue={item?.description}
-              className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2 text-sm outline-none focus:border-cream/50"
+              className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-2.5 text-sm outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
             />
           </label>
           <div className="grid grid-cols-2 gap-3">
             <Field name="price" label="Fiyat (₺)" type="number" defaultValue={item?.price} required />
             <label className="block">
-              <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">Kategori</span>
+              <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">Kategori</span>
               <select
                 name="category_slug"
                 defaultValue={item?.category_slug}
-                className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2.5 text-sm outline-none focus:border-cream/50"
+                className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-3 text-base outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
               >
                 {categories.filter((c) => c.slug !== "tumu").map((c) => (
                   <option key={c.slug} value={c.slug}>{c.name}</option>
@@ -210,7 +231,7 @@ function ItemDialog({
           </div>
           <Field name="sort_order" label="Sıra" type="number" defaultValue={item?.sort_order ?? 0} />
           <label className="block">
-            <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">Görsel</span>
+            <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">Görsel</span>
             <input
               type="file"
               accept="image/*"
@@ -218,12 +239,12 @@ function ItemDialog({
                 const f = e.target.files?.[0];
                 if (f) uploadImage(f);
               }}
-              className="text-xs"
+              className="text-xs text-ink/70"
             />
             {imagePath && (
               <div className="mt-2 flex items-center gap-2">
-                <img src={imagePath} alt="" className="h-12 w-12 rounded object-cover" />
-                <span className="text-xs text-cream/70 break-all">{imagePath}</span>
+                <img src={imagePath} alt="" className="h-12 w-12 rounded-lg object-cover ring-1 ring-ink/10" />
+                <span className="text-xs text-ink/60 break-all">{imagePath}</span>
               </div>
             )}
           </label>
@@ -235,10 +256,20 @@ function ItemDialog({
             />
             <span>Aktif (menüde göster)</span>
           </label>
-          {err && <p className="text-amber-200 text-sm">{err}</p>}
+          {err && <p className="text-rosso text-sm">{err}</p>}
           <div className="flex gap-2 mt-2">
-            <button type="button" onClick={onClose} className="btn-ghost flex-1">İptal</button>
-            <button disabled={busy} className="btn-primary flex-1 disabled:opacity-60" type="submit">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 rounded-full px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] bg-ink/10 hover:bg-ink/15"
+            >
+              İptal
+            </button>
+            <button
+              disabled={busy}
+              className="pill-cta pill-cta--red flex-1 justify-center disabled:opacity-60"
+              type="submit"
+            >
               {busy ? "..." : "Kaydet"}
             </button>
           </div>
@@ -263,13 +294,13 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="block text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">{label}</span>
+      <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">{label}</span>
       <input
         name={name}
         type={type}
         defaultValue={defaultValue}
         required={required}
-        className="w-full rounded-lg bg-brand-950/60 border border-cream/15 px-3 py-2.5 text-sm outline-none focus:border-cream/50"
+        className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-3 text-base outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30"
       />
     </label>
   );
