@@ -1,6 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
 import { tl } from "@/lib/format";
+import { Sparkle } from "./Sparkle";
+import { PlateImage } from "./PlateImage";
 
 export type CategoryDTO = { slug: string; name: string };
 export type ItemDTO = {
@@ -11,6 +13,9 @@ export type ItemDTO = {
   category_slug: string;
   image: string | null;
 };
+
+const CARD_TONES = ["red", "green", "cream"] as const;
+type Tone = (typeof CARD_TONES)[number];
 
 export function MenuSection({
   categories,
@@ -26,25 +31,26 @@ export function MenuSection({
   );
 
   return (
-    <section id="menu" className="pt-2 pb-16">
-      <div className="container-app">
-        <h2 className="text-center font-display text-4xl">MENÜ</h2>
-        <p className="text-center text-cream/70 text-xs tracking-[0.28em] uppercase mt-2">
-          En sevilen lezzetlerimiz
-        </p>
+    <section id="menu" className="relative bg-crema-light text-ink py-20 md:py-28 grain">
+      <div className="container-wrap">
+        <div className="text-center fade-up">
+          <div className="ornament-line text-rosso mb-4">
+            <Sparkle size={16} className="text-rosso" />
+          </div>
+          <h2 className="section-title text-rosso uppercase">Menü</h2>
+          <p className="font-serif italic text-bosco-700 mt-2 text-lg md:text-xl">
+            En sevilen lezzetlerimiz
+          </p>
+        </div>
 
-        <div className="mt-6 flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
+        <div className="mt-10 flex justify-start md:justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5">
           {categories.map((c) => {
             const on = active === c.slug;
             return (
               <button
                 key={c.slug}
                 onClick={() => setActive(c.slug)}
-                className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold tracking-[0.2em] uppercase transition ring-1 ${
-                  on
-                    ? "tab-active ring-cream"
-                    : "bg-brand-900/40 text-cream/80 ring-cream/15 hover:bg-brand-900/70"
-                }`}
+                className={`tab-pill shrink-0 ${on ? "tab-pill--active" : "tab-pill--idle"}`}
               >
                 {c.name}
               </button>
@@ -52,25 +58,13 @@ export function MenuSection({
           })}
         </div>
 
-        <ul className="mt-6 grid gap-4">
-          {filtered.map((item) => (
-            <li key={item.id} className="card-menu p-4 fade-in">
-              <div className="flex items-center gap-4">
-                <Thumb src={item.image} />
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-display text-xl leading-tight">{item.name}</h3>
-                  <p className="mt-1 text-cream/75 text-[13px] line-clamp-2">
-                    {item.description}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-display text-2xl text-gold">₺{tl(item.price)}</p>
-                </div>
-              </div>
-            </li>
-          ))}
+        <ul className="mt-10 md:mt-14 grid gap-5 md:gap-6 max-w-3xl mx-auto">
+          {filtered.map((item, idx) => {
+            const tone: Tone = CARD_TONES[idx % CARD_TONES.length];
+            return <MenuCard key={item.id} item={item} tone={tone} />;
+          })}
           {filtered.length === 0 && (
-            <li className="text-center text-cream/60 py-10">Bu kategoride ürün yok.</li>
+            <li className="text-center text-ink/60 py-10">Bu kategoride ürün yok.</li>
           )}
         </ul>
       </div>
@@ -78,23 +72,36 @@ export function MenuSection({
   );
 }
 
-function Thumb({ src }: { src: string | null }) {
+function MenuCard({ item, tone }: { item: ItemDTO; tone: Tone }) {
+  const klass =
+    tone === "red"
+      ? "menu-card menu-card--red"
+      : tone === "green"
+      ? "menu-card menu-card--green"
+      : "menu-card menu-card--cream";
+
+  const sparkleColor =
+    tone === "cream" ? "text-rosso" : "text-crema";
+
   return (
-    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1 ring-cream/15 bg-brand-700">
-      {src ? (
-        <img
-          src={src}
-          alt=""
-          className="h-full w-full object-cover"
-          onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = "none")}
-        />
-      ) : null}
-      <div className="absolute inset-0 flex items-center justify-center text-cream/70">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
-          <circle cx="12" cy="12" r="9" />
-          <path d="M7 12c1 2 3 3 5 3M14 9c-1 0-2 1-2 2" />
-        </svg>
+    <li className={`${klass} fade-up`}>
+      <div className="pl-1 md:pl-2">
+        <PlateImage src={item.image} alt={item.name} shape="round" className="plate" label="Yükle" />
       </div>
-    </div>
+      <div className="min-w-0 py-2 md:py-3 pr-2 relative">
+        <h3 className="font-display uppercase text-[clamp(1.4rem,4.6vw,2.2rem)] leading-tight tracking-tightest">
+          {item.name}
+        </h3>
+        <p className="mt-1 md:mt-2 text-sm md:text-base leading-snug opacity-90 line-clamp-2 max-w-[42ch]">
+          {item.description}
+        </p>
+        <p className="mt-2 md:mt-3 font-display text-2xl md:text-3xl tracking-tight">
+          ₺{tl(item.price)}
+        </p>
+
+        <Sparkle size={12} className={`absolute -right-1 top-2 ${sparkleColor}`} />
+        <Sparkle size={10} className={`absolute -right-2 bottom-4 ${sparkleColor}`} rotate={30} />
+      </div>
+    </li>
   );
 }

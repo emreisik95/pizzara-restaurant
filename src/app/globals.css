@@ -3,39 +3,109 @@
 @tailwind utilities;
 
 :root {
-  --brand-bg: #8b1e1b;
-  --brand-deep: #581210;
-  --cream: #f4e9d8;
-  --gold: #d6a55a;
+  --rosso: #c8302c;
+  --rosso-dark: #a82622;
+  --bosco: #3d5840;
+  --bosco-dark: #2e4632;
+  --crema: #f1e6cf;
+  --crema-light: #f7eddb;
+  --ink: #1e1410;
 }
 
-html, body { background: var(--brand-bg); color: var(--cream); }
-body { font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; }
+html, body { background: var(--crema-light); color: var(--ink); }
+body {
+  font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
 
-.font-display { font-family: var(--font-display), "Cormorant Garamond", Georgia, serif; letter-spacing: 0.01em; }
+::selection { background: var(--rosso); color: var(--crema); }
+
+/* ─── Display & serif ─── */
+.font-display { font-family: var(--font-display), "Big Shoulders Display", Impact, sans-serif; font-weight: 800; letter-spacing: -0.01em; }
+.font-serif   { font-family: var(--font-serif), "Cormorant Garamond", Georgia, serif; }
+
+/* ─── Vintage paper grain ─── */
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode: multiply;
+  opacity: 0.6;
+}
 
 @layer components {
-  .container-app { @apply mx-auto w-full max-w-md px-5; }
-  .btn-primary { @apply inline-flex items-center justify-center rounded-full bg-cream text-brand-900 font-semibold px-6 py-3 text-sm tracking-wide shadow-card transition active:scale-[0.98] hover:bg-white; }
-  .btn-ghost { @apply inline-flex items-center justify-center rounded-full border border-cream/60 text-cream font-semibold px-6 py-3 text-sm tracking-wide transition hover:bg-cream/10; }
-  .pill { @apply inline-flex items-center rounded-full px-4 py-2 text-xs font-medium tracking-[0.18em] uppercase; }
-  .card-menu { @apply relative overflow-hidden rounded-2xl bg-brand-900/60 ring-1 ring-cream/10 shadow-card; }
-  .divider-ornament { @apply flex items-center justify-center gap-3 text-cream/70; }
-  .divider-ornament::before, .divider-ornament::after { content: ""; @apply h-px w-16 bg-cream/30; }
+  .container-wrap { @apply mx-auto w-full max-w-[1180px] px-5 md:px-8; }
+
+  /* CTA pill with sparkle slot */
+  .pill-cta {
+    @apply relative inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm md:text-base font-semibold uppercase tracking-[0.22em];
+    transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+  }
+  .pill-cta:active { transform: scale(0.97); }
+
+  .pill-cta--red { background: var(--rosso); color: var(--crema); box-shadow: 0 12px 26px -16px rgba(200,48,44,0.9); }
+  .pill-cta--red:hover { background: var(--rosso-dark); }
+  .pill-cta--green { background: var(--bosco); color: var(--crema); }
+  .pill-cta--green:hover { background: var(--bosco-dark); }
+  .pill-cta--outline-cream {
+    background: transparent; color: var(--crema);
+    box-shadow: inset 0 0 0 1.5px rgba(241,230,207,0.6);
+  }
+  .pill-cta--outline-cream:hover { background: rgba(241,230,207,0.08); }
+
+  .ornament-line { @apply flex items-center justify-center gap-3; }
+  .ornament-line::before, .ornament-line::after {
+    content: ""; height: 1px; width: 64px; background: currentColor; opacity: 0.7;
+  }
+
+  /* Tab pill (menu categories) */
+  .tab-pill {
+    @apply rounded-full px-5 py-2 text-[11px] md:text-xs font-semibold uppercase tracking-[0.22em] transition;
+  }
+  .tab-pill--active { background: var(--rosso); color: var(--crema); box-shadow: 0 6px 14px -10px rgba(200,48,44,0.9); }
+  .tab-pill--idle   { color: var(--ink); opacity: 0.7; }
+  .tab-pill--idle:hover { opacity: 1; background: rgba(30,20,16,0.06); }
+
+  /* Section heading */
+  .section-eyebrow { @apply text-[11px] uppercase tracking-[0.32em] font-semibold opacity-80; }
+  .section-title   { @apply font-display text-[clamp(2.6rem,9vw,5rem)] leading-[0.95]; }
+
+  /* Menu card */
+  .menu-card {
+    @apply relative overflow-hidden rounded-[28px] md:rounded-[36px] grid grid-cols-[auto,1fr] gap-4 md:gap-6 items-center p-3 md:p-5 pr-6 md:pr-10;
+    box-shadow: 0 22px 48px -28px rgba(20, 12, 8, 0.45);
+  }
+  .menu-card--red    { background: var(--rosso); color: var(--crema); }
+  .menu-card--green  { background: var(--bosco); color: var(--crema); }
+  .menu-card--cream  { background: var(--crema); color: var(--bosco-dark); box-shadow: inset 0 0 0 1px rgba(46,70,50,0.12), 0 22px 48px -32px rgba(20, 12, 8, 0.35); }
+
+  .plate {
+    @apply relative aspect-square rounded-full overflow-hidden ring-4 md:ring-[6px] ring-black/20;
+    width: clamp(96px, 22vw, 168px);
+  }
+
+  /* Star ornament dot accent next to button */
+  .sparkle-accent {
+    @apply absolute -right-1 -top-1 md:-right-2 md:-top-2;
+  }
 }
 
-.bg-paper {
-  background-image: radial-gradient(1200px 600px at 50% -10%, rgba(255,255,255,0.06), transparent 60%),
-                    radial-gradient(800px 400px at 100% 30%, rgba(0,0,0,0.25), transparent 70%),
-                    linear-gradient(180deg, #8b1e1b 0%, #6f1815 40%, #581210 100%);
-}
+/* page-enter stagger */
+.fade-up { animation: fadeUp 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
-.tab-active { background: var(--cream); color: #581210; }
-
-/* gentle ornamental scroll */
-.fade-in { animation: fadeIn 0.6s ease both; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-
-/* hide scrollbars for category tabs */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
