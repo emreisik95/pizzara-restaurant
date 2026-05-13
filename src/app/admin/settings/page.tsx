@@ -12,11 +12,12 @@ const KEYS = [
   ["phone", "Telefon", "input"],
   ["instagram", "Instagram", "input"],
   ["hours", "Çalışma Saatleri", "input"],
+  ["reservation_enabled", "Rezervasyon Bölümünü Göster", "toggle"],
 ] as const;
 
 export default function SettingsPage() {
   const values: Record<string, string> = {};
-  for (const [k] of KEYS) values[k] = getSetting(k, "");
+  for (const [k, , t] of KEYS) values[k] = getSetting(k, t === "toggle" ? "1" : "");
   return (
     <div>
       <h1 className="font-display text-3xl md:text-4xl uppercase text-rosso mb-1">Site Ayarları</h1>

@@ -101,6 +101,21 @@ export function SettingsForm({
                 </motion.div>
               )}
             </div>
+          ) : type === "toggle" ? (
+            <button
+              type="button"
+              onClick={() => set(key, values[key] === "1" ? "0" : "1")}
+              className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
+                values[key] === "1" ? "bg-bosco" : "bg-ink/20"
+              }`}
+              aria-pressed={values[key] === "1"}
+            >
+              <motion.span
+                className="inline-block h-5 w-5 rounded-full bg-crema shadow"
+                animate={{ x: values[key] === "1" ? 22 : 4 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              />
+            </button>
           ) : (
             <input
               value={values[key] || ""}

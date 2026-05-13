@@ -97,6 +97,7 @@ export function ensureSeed() {
   setSetting("phone", "+90 545 116 41 42");
   setSetting("instagram", "@pizzararestaurant");
   setSetting("hours", "Her gün 12:00 - 23:00");
+  setSetting("reservation_enabled", "1");
 
   setSetting("seeded", "1");
 }

@@ -238,28 +238,32 @@ function TableArt() {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
-      <svg viewBox="0 0 320 180" className="absolute inset-0 h-full w-full" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {/* floor line */}
-        <path d="M20 150 H300" />
-        {/* table top + leg */}
-        <path d="M90 110 H230" />
-        <path d="M160 110 V150" />
-        <path d="M140 150 H180" />
-        {/* vase on table */}
-        <ellipse cx="160" cy="108" rx="9" ry="3" />
-        <path d="M155 108 v-10 q5 -4 10 0 v10" />
-        {/* tiny flower */}
-        <circle cx="160" cy="92" r="3.2" />
-        {/* left chair */}
-        <path d="M70 150 V90" />
-        <circle cx="70" cy="84" r="8" />
-        <path d="M70 92 V108" />
-        <path d="M62 110 H78" />
+      <svg viewBox="0 0 400 280" className="absolute inset-0 h-full w-full" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        {/* left chair — hoop back + seat + legs */}
+        <path d="M60 130 C 60 70, 130 70, 130 130" />
+        <path d="M68 130 C 68 80, 122 80, 122 130" />
+        <ellipse cx="95" cy="148" rx="40" ry="8" />
+        <path d="M65 152 L 50 230" />
+        <path d="M125 152 L 140 230" />
+        <path d="M88 156 L 80 240" />
+        <path d="M102 156 L 110 240" />
+        <path d="M45 232 L 145 232" />
+        {/* center table — round top, pedestal, oval base */}
+        <ellipse cx="200" cy="110" rx="46" ry="10" />
+        <path d="M155 112 C 175 130, 175 130, 195 132" />
+        <path d="M245 112 C 225 130, 225 130, 205 132" />
+        <path d="M198 132 L 198 220" />
+        <path d="M202 132 L 202 220" />
+        <ellipse cx="200" cy="225" rx="34" ry="7" />
         {/* right chair */}
-        <path d="M250 150 V90" />
-        <circle cx="250" cy="84" r="8" />
-        <path d="M250 92 V108" />
-        <path d="M242 110 H258" />
+        <path d="M270 130 C 270 70, 340 70, 340 130" />
+        <path d="M278 130 C 278 80, 332 80, 332 130" />
+        <ellipse cx="305" cy="148" rx="40" ry="8" />
+        <path d="M275 152 L 260 230" />
+        <path d="M335 152 L 350 230" />
+        <path d="M298 156 L 290 240" />
+        <path d="M312 156 L 320 240" />
+        <path d="M255 232 L 355 232" />
       </svg>
       <Sparkle size={14} className="absolute top-2 right-10 text-crema" />
       <Sparkle size={10} className="absolute bottom-4 left-8 text-crema" rotate={30} />

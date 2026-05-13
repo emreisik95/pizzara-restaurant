@@ -40,7 +40,7 @@ export default function Home() {
             image: i.image,
           }))}
         />
-        <Reservation />
+        {getSetting("reservation_enabled", "1") === "1" && <Reservation />}
       </main>
       <Footer
         brand={brand}
