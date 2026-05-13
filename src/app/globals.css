@@ -81,8 +81,8 @@ body {
 
   /* Menu card */
   .menu-card {
-    @apply relative overflow-hidden rounded-[28px] md:rounded-[36px] grid grid-cols-[auto,1fr] gap-4 md:gap-6 items-center p-3 md:p-5 pr-6 md:pr-10;
-    box-shadow: 0 22px 48px -28px rgba(20, 12, 8, 0.45);
+    @apply relative overflow-hidden rounded-[30px] md:rounded-[40px] grid grid-cols-[auto,1fr] gap-4 md:gap-7 items-center p-3 md:p-5 pr-8 md:pr-12;
+    box-shadow: 0 26px 52px -28px rgba(20, 12, 8, 0.5);
   }
   .menu-card--red    { background: var(--rosso); color: var(--crema); }
   .menu-card--green  { background: var(--bosco); color: var(--crema); }

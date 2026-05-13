@@ -43,7 +43,7 @@ export function MenuSection({
           </p>
         </div>
 
-        <div className="mt-10 flex justify-start md:justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5">
+        <div className="mt-10 flex justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5">
           {categories.map((c) => {
             const on = active === c.slug;
             return (
