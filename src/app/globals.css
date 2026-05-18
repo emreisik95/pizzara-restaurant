@@ -4,12 +4,19 @@
 
 :root {
   --rosso: #c8302c;
+  --rosso-rgb: 200 48 44;
   --rosso-dark: #a82622;
+  --rosso-dark-rgb: 168 38 34;
   --bosco: #3d5840;
+  --bosco-rgb: 61 88 64;
   --bosco-dark: #2e4632;
+  --bosco-dark-rgb: 46 70 50;
   --crema: #f1e6cf;
+  --crema-rgb: 241 230 207;
   --crema-light: #f7eddb;
+  --crema-light-rgb: 247 237 219;
   --ink: #1e1410;
+  --ink-rgb: 30 20 16;
 }
 
 html { scroll-behavior: smooth; }

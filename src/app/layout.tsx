@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Antonio, Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { readTheme, themeCss } from "@/lib/theme";
 
 const display = Antonio({
   subsets: ["latin"],
@@ -30,9 +31,20 @@ export const metadata: Metadata = {
     "Pizzara Restaurant — taze malzeme, ustaca dokunuş. Her tabakta gerçek İtalyan ruhu. İstanbul'da rezervasyon yapın.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#1e1410",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const theme = readTheme();
   return (
     <html lang="tr" className={`${display.variable} ${serif.variable} ${body.variable}`}>
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: themeCss(theme) }} />
+      </head>
       <body className="min-h-screen">{children}</body>
     </html>
   );

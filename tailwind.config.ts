@@ -1,12 +1,15 @@
 import type { Config } from "tailwindcss";
 
+const rgbVar = (name: string) => `rgb(var(--${name}-rgb) / <alpha-value>)`;
+
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
         rosso: {
-          DEFAULT: "#c8302c",
+          DEFAULT: rgbVar("rosso"),
+          dark: rgbVar("rosso-dark"),
           50: "#fbeeee",
           100: "#f6d2d0",
           200: "#ecaaa6",
@@ -20,7 +23,8 @@ export default {
           950: "#2e0807",
         },
         bosco: {
-          DEFAULT: "#3d5840",
+          DEFAULT: rgbVar("bosco"),
+          dark: rgbVar("bosco-dark"),
           50: "#eef3ef",
           100: "#d4dfd6",
           200: "#a8bfac",
@@ -34,7 +38,8 @@ export default {
           950: "#0c1310",
         },
         crema: {
-          DEFAULT: "#f1e6cf",
+          DEFAULT: rgbVar("crema"),
+          light: rgbVar("crema-light"),
           50: "#fbf6e8",
           100: "#f7eddb",
           200: "#f1e6cf",
@@ -46,7 +51,9 @@ export default {
           800: "#52422a",
           900: "#34291a",
         },
-        ink: "#1e1410",
+        ink: {
+          DEFAULT: rgbVar("ink"),
+        },
       },
       fontFamily: {
         display: ["var(--font-display)", "'Antonio'", "Impact", "sans-serif"],

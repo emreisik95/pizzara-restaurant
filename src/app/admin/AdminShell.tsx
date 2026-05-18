@@ -81,7 +81,7 @@ export function AdminShell({
           </Link>
         </div>
 
-        <main className="flex-1 px-5 md:px-10 lg:px-14 py-8 md:py-12">
+        <main className="flex-1 px-4 sm:px-6 md:px-10 lg:px-14 py-6 sm:py-8 md:py-12 pb-[calc(env(safe-area-inset-bottom)+1.5rem)]">
           <motion.div
             key={path}
             initial={{ opacity: 0, y: 8 }}

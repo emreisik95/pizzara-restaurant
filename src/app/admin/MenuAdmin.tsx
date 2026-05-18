@@ -44,10 +44,10 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-4 sm:mb-5 gap-3">
         <p className="text-ink/70 text-sm">{items.length} ürün</p>
         <motion.button
-          className="pill-cta pill-cta--red text-xs md:text-sm px-5 py-2.5"
+          className="pill-cta pill-cta--red text-xs sm:text-sm px-4 sm:px-5 py-2.5"
           onClick={() => setCreating(true)}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
@@ -62,15 +62,15 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
           <motion.li
             layout
             key={it.id}
-            className={`rounded-2xl bg-crema p-4 shadow-[0_18px_40px_-28px_rgba(20,12,8,0.4)] ring-1 ring-ink/5 ${!it.is_active ? "opacity-60" : ""}`}
+            className={`rounded-2xl bg-crema p-3 sm:p-4 shadow-[0_18px_40px_-28px_rgba(20,12,8,0.4)] ring-1 ring-ink/5 ${!it.is_active ? "opacity-60" : ""}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: it.is_active ? 1 : 0.6, y: 0 }}
             exit={{ opacity: 0, y: -8, scale: 0.98, transition: { duration: 0.18 } }}
             transition={{ duration: 0.4, delay: Math.min(idx * 0.03, 0.25), ease: EASE }}
             whileHover={{ y: -2 }}
           >
-            <div className="flex items-center gap-4">
-              <div className="h-14 w-14 rounded-xl bg-bosco/15 ring-1 ring-ink/5 overflow-hidden shrink-0">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-xl bg-bosco/15 ring-1 ring-ink/5 overflow-hidden shrink-0">
                 {it.image && (
                   <img
                     src={it.image}
@@ -81,34 +81,40 @@ export function MenuAdmin({ categories, items }: { categories: Cat[]; items: Ite
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-display uppercase tracking-tight text-lg">{it.name}</h3>
-                  <span className="text-[10px] tracking-[0.22em] uppercase bg-bosco/10 text-bosco-700 px-2 py-0.5 rounded-full font-semibold">
-                    {categories.find((c) => c.slug === it.category_slug)?.name ?? it.category_slug}
-                  </span>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-display uppercase tracking-tight text-base sm:text-lg truncate">{it.name}</h3>
+                      <span className="text-[10px] tracking-[0.22em] uppercase bg-bosco/10 text-bosco-700 px-2 py-0.5 rounded-full font-semibold">
+                        {categories.find((c) => c.slug === it.category_slug)?.name ?? it.category_slug}
+                      </span>
+                    </div>
+                    {it.description && (
+                      <p className="text-ink/70 text-xs line-clamp-2 mt-0.5">{it.description}</p>
+                    )}
+                  </div>
+                  <p className="font-display text-lg sm:text-xl text-rosso shrink-0">₺{it.price}</p>
                 </div>
-                <p className="text-ink/70 text-xs line-clamp-1 mt-0.5">{it.description}</p>
-              </div>
-              <p className="font-display text-xl text-rosso shrink-0">₺{it.price}</p>
-              <div className="flex gap-1 shrink-0">
-                <button
-                  onClick={() => toggle(it)}
-                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-bosco/10 text-bosco-700 hover:bg-bosco/20"
-                >
-                  {it.is_active ? "Gizle" : "Göster"}
-                </button>
-                <button
-                  onClick={() => setEditing(it)}
-                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-ink/10 hover:bg-ink/15"
-                >
-                  Düzenle
-                </button>
-                <button
-                  onClick={() => remove(it.id)}
-                  className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-rosso/15 text-rosso-700 hover:bg-rosso/25"
-                >
-                  Sil
-                </button>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  <button
+                    onClick={() => toggle(it)}
+                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-bosco/10 text-bosco-700 hover:bg-bosco/20"
+                  >
+                    {it.is_active ? "Gizle" : "Göster"}
+                  </button>
+                  <button
+                    onClick={() => setEditing(it)}
+                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-ink/10 hover:bg-ink/15"
+                  >
+                    Düzenle
+                  </button>
+                  <button
+                    onClick={() => remove(it.id)}
+                    className="rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] bg-rosso/15 text-rosso-700 hover:bg-rosso/25"
+                  >
+                    Sil
+                  </button>
+                </div>
               </div>
             </div>
           </motion.li>
