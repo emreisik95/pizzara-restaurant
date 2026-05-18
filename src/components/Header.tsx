@@ -3,15 +3,18 @@ import { useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 
-const NAV = [
+const BASE_NAV: Array<[string, string]> = [
   ["#hero", "Anasayfa"],
   ["#menu", "Menü"],
   ["#reservation", "Rezervasyon"],
   ["#contact", "İletişim"],
-] as const;
+];
 
-export function Header({ brand }: { brand: string }) {
+export function Header({ brand, reservationEnabled = true }: { brand: string; reservationEnabled?: boolean }) {
   const [open, setOpen] = useState(false);
+  const NAV = reservationEnabled
+    ? BASE_NAV
+    : BASE_NAV.filter(([href]) => href !== "#reservation");
   return (
     <motion.header
       className="sticky top-0 z-50 bg-rosso text-crema-200 grain"

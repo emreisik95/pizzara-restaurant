@@ -14,6 +14,7 @@ export default function Home() {
   const items = listMenu(true);
 
   const brand = getSetting("hero_eyebrow", "PIZZARA RESTAURANT");
+  const reservationEnabled = getSetting("reservation_enabled", "1") === "1";
   const hero = {
     eyebrow: brand,
     title: getSetting("hero_title", "İYİ MALZEME\nGERÇEK LEZZET"),
@@ -26,7 +27,7 @@ export default function Home() {
 
   return (
     <>
-      <Header brand={brand} />
+      <Header brand={brand} reservationEnabled={reservationEnabled} />
       <main>
         <Hero {...hero} />
         <MenuSection
@@ -40,7 +41,7 @@ export default function Home() {
             image: i.image,
           }))}
         />
-        {getSetting("reservation_enabled", "1") === "1" && <Reservation />}
+        {reservationEnabled && <Reservation />}
       </main>
       <Footer
         brand={brand}
