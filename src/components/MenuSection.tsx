@@ -59,7 +59,7 @@ export function MenuSection({
         </motion.div>
 
         <motion.div
-          className="mt-10 flex justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5"
+          className="mt-10 flex justify-start md:justify-center gap-1 md:gap-2 overflow-x-auto no-scrollbar -mx-5 px-5 snap-x snap-mandatory"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-40px" }}
@@ -74,7 +74,7 @@ export function MenuSection({
               <motion.button
                 key={c.slug}
                 onClick={() => setActive(c.slug)}
-                className={`tab-pill shrink-0 relative ${on ? "tab-pill--active" : "tab-pill--idle"}`}
+                className={`tab-pill shrink-0 snap-start relative ${on ? "tab-pill--active" : "tab-pill--idle"}`}
                 variants={{
                   hidden: { opacity: 0, y: 12 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
