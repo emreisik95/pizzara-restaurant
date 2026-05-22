@@ -139,9 +139,9 @@ export function Hero({ eyebrow, title, subtitle, image }: Props) {
             <span className="inline-block h-px w-10 md:w-16 bg-crema/30" />
           </motion.div>
 
-          <h1 className="font-display uppercase text-[clamp(2.5rem,9.5vw,5.5rem)] leading-[1.02] tracking-[0.005em]">
+          <h1 className="font-display uppercase text-[clamp(2.5rem,9.5vw,5.5rem)] leading-[1.05] tracking-[0.005em]">
             {lines.map((l, i) => (
-              <span key={i} className="block overflow-hidden">
+              <span key={i} className="block overflow-hidden pb-[0.12em] -mb-[0.12em]">
                 <motion.span className="block" variants={lineUp}>
                   {l}
                 </motion.span>
