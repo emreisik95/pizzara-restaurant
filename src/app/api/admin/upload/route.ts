@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { readSession } from "@/lib/auth";
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(process.cwd(), "public", "uploads");
+const UPLOAD_DIR = process.env.UPLOAD_DIR || "/data/uploads";
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 const ALLOWED = new Set(["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"]);

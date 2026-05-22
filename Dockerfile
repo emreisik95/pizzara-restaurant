@@ -20,10 +20,10 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 ENV DATA_DIR=/data
-ENV UPLOAD_DIR=/app/public/uploads
+ENV UPLOAD_DIR=/data/uploads
 
 RUN addgroup -S app && adduser -S app -G app && \
-    mkdir -p /data /app/public/uploads && \
+    mkdir -p /data/uploads /app/public/uploads && \
     chown -R app:app /app /data
 
 COPY --from=build --chown=app:app /app/public ./public

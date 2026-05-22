@@ -8,3 +8,4 @@ data/*.db-wal
 tsconfig.tsbuildinfo
 public/uploads/*
 !public/uploads/.gitkeep
+.claude/
