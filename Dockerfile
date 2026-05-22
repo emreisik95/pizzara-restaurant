@@ -29,8 +29,10 @@ RUN addgroup -S app && adduser -S app -G app && \
 COPY --from=build --chown=app:app /app/public ./public
 COPY --from=build --chown=app:app /app/.next/standalone ./
 COPY --from=build --chown=app:app /app/.next/static ./.next/static
-# better-sqlite3 native binding lives in node_modules — copy full deps for safety
+# better-sqlite3 + sharp native bindings — copy full deps for safety
 COPY --from=build --chown=app:app /app/node_modules/better-sqlite3 ./node_modules/better-sqlite3
+COPY --from=build --chown=app:app /app/node_modules/sharp ./node_modules/sharp
+COPY --from=build --chown=app:app /app/node_modules/@img ./node_modules/@img
 
 USER app
 EXPOSE 3000

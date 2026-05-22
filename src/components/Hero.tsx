@@ -64,6 +64,8 @@ export function Hero({ eyebrow, title, subtitle, image }: Props) {
           src={image}
           alt="Pizzara signature pasta"
           shape="round"
+          priority
+          sizes="(max-width: 768px) 90vw, 50vw"
           className="absolute top-1/2 -translate-y-1/2 right-[-22%] md:right-[-14%] w-[125%] md:w-[110%] aspect-square ring-0 shadow-[0_50px_100px_-32px_rgba(0,0,0,0.7)]"
         />
       </motion.div>

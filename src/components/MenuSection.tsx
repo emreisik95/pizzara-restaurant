@@ -141,6 +141,7 @@ export function MenuSection({
                   idx={idx}
                   reduce={reduce}
                   onOpen={() => setLightbox(item)}
+                  priority={idx < 3}
                 />
               );
             })}
@@ -205,7 +206,13 @@ export function MenuSection({
                 className="relative -mt-16 mx-auto plate-lg"
                 transition={{ duration: 0.45, ease: EASE }}
               >
-                <PlateImage src={lightbox.image} alt={lightbox.name} shape="round" className="w-full h-full" />
+                <PlateImage
+                  src={lightbox.image}
+                  alt={lightbox.name}
+                  shape="round"
+                  className="w-full h-full"
+                  sizes="(max-width: 640px) 220px, 260px"
+                />
               </motion.div>
 
               <div className="px-6 pt-4 pb-6 sm:px-7 sm:pt-5 sm:pb-7 text-center">
@@ -272,12 +279,14 @@ function MenuCard({
   idx,
   reduce,
   onOpen,
+  priority,
 }: {
   item: ItemDTO;
   tone: Tone;
   idx: number;
   reduce: boolean | null;
   onOpen: () => void;
+  priority?: boolean;
 }) {
   const klass =
     tone === "red"
@@ -312,7 +321,14 @@ function MenuCard({
       }}
     >
       <motion.div layoutId={`plate-${item.id}`} className="pl-1 md:pl-2" transition={{ duration: 0.45, ease: EASE }}>
-        <PlateImage src={item.image} alt={item.name} shape="round" className="plate" />
+        <PlateImage
+          src={item.image}
+          alt={item.name}
+          shape="round"
+          className="plate"
+          priority={priority}
+          sizes="(max-width: 640px) 220px, 260px"
+        />
       </motion.div>
       <div className="min-w-0 py-4 md:py-5 pr-2 relative">
         <motion.h3

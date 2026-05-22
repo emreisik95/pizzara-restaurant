@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 
 type Props = {
@@ -7,9 +8,18 @@ type Props = {
   shape?: "round" | "square";
   className?: string;
   label?: string;
+  priority?: boolean;
+  sizes?: string;
 };
 
-export function PlateImage({ src, alt, shape = "round", className = "" }: Props) {
+export function PlateImage({
+  src,
+  alt,
+  shape = "round",
+  className = "",
+  priority,
+  sizes,
+}: Props) {
   const [errored, setErrored] = useState(false);
   const showImg = src && !errored;
   const radius = shape === "round" ? "rounded-full" : "rounded-2xl";
@@ -27,17 +37,25 @@ export function PlateImage({ src, alt, shape = "round", className = "" }: Props)
       aria-label={alt}
     >
       {showImg ? (
-        <img
+        <Image
           src={src!}
           alt={alt}
-          className="plate-img absolute inset-0 h-full w-full object-cover"
+          fill
+          priority={priority}
+          sizes={sizes ?? "(max-width: 640px) 220px, 260px"}
+          quality={85}
+          className="plate-img object-cover"
           onError={() => setErrored(true)}
         />
       ) : (
         <span
           aria-hidden
           className="absolute inset-0 flex items-center justify-center font-display text-crema/80 select-none"
-          style={{ fontSize: "min(58%, 5rem)", letterSpacing: "0.02em", textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
+          style={{
+            fontSize: "min(58%, 5rem)",
+            letterSpacing: "0.02em",
+            textShadow: "0 2px 12px rgba(0,0,0,0.45)",
+          }}
         >
           {initial}
         </span>
