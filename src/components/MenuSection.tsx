@@ -159,7 +159,7 @@ function MenuCard({
         <h3 className="font-display uppercase text-[clamp(1.3rem,4.2vw,2rem)] leading-[1.04] tracking-[0.005em]">
           {item.name}
         </h3>
-        <p className="mt-1 md:mt-2 text-[13px] md:text-sm leading-snug opacity-90 line-clamp-2 max-w-[42ch]">
+        <p className="mt-1 md:mt-2 text-[13px] md:text-sm leading-snug opacity-90 md:line-clamp-2 md:max-w-[42ch]">
           {item.description}
         </p>
         <p className="mt-2 md:mt-3 font-display text-2xl md:text-3xl tracking-tight">
