@@ -4,7 +4,8 @@ import { createPortal } from "react-dom";
 import { tl } from "@/lib/format";
 import { Sparkle } from "./Sparkle";
 import { PlateImage } from "./PlateImage";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion, useTransform, type Variants } from "motion/react";
+import { useDeviceTilt, type DeviceTilt } from "@/lib/useDeviceTilt";
 
 export type CategoryDTO = { slug: string; name: string };
 export type ItemDTO = {
@@ -45,6 +46,11 @@ export function MenuSection({
   const [active, setActive] = useState("tumu");
   const [lightbox, setLightbox] = useState<ItemDTO | null>(null);
   const reduce = useReducedMotion();
+  const tilt = useDeviceTilt();
+  const lbTx = useTransform(tilt.x, (v) => v * 14);
+  const lbTy = useTransform(tilt.y, (v) => v * 12);
+  const lbRotY = useTransform(tilt.x, (v) => v * 8);
+  const lbRotX = useTransform(tilt.y, (v) => -v * 8);
   const filtered = useMemo(
     () => (active === "tumu" ? items : items.filter((i) => i.category_slug === active)),
     [active, items]
@@ -142,6 +148,7 @@ export function MenuSection({
                   reduce={reduce}
                   onOpen={() => setLightbox(item)}
                   priority={idx < 3}
+                  tilt={tilt}
                 />
               );
             })}
@@ -205,14 +212,26 @@ export function MenuSection({
                 layoutId={`plate-${lightbox.id}`}
                 className="relative -mt-16 mx-auto plate-lg"
                 transition={{ duration: 0.45, ease: EASE }}
+                style={{ perspective: 1000 }}
               >
-                <PlateImage
-                  src={lightbox.image}
-                  alt={lightbox.name}
-                  shape="round"
-                  className="w-full h-full"
-                  sizes="(max-width: 640px) 220px, 260px"
-                />
+                <motion.div
+                  className="absolute inset-0"
+                  style={{
+                    x: lbTx,
+                    y: lbTy,
+                    rotateY: lbRotY,
+                    rotateX: lbRotX,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  <PlateImage
+                    src={lightbox.image}
+                    alt={lightbox.name}
+                    shape="round"
+                    className="w-full h-full"
+                    sizes="(max-width: 640px) 220px, 260px"
+                  />
+                </motion.div>
               </motion.div>
 
               <div className="px-6 pt-4 pb-6 sm:px-7 sm:pt-5 sm:pb-7 text-center">
@@ -280,6 +299,7 @@ function MenuCard({
   reduce,
   onOpen,
   priority,
+  tilt,
 }: {
   item: ItemDTO;
   tone: Tone;
@@ -287,7 +307,12 @@ function MenuCard({
   reduce: boolean | null;
   onOpen: () => void;
   priority?: boolean;
+  tilt: DeviceTilt;
 }) {
+  const plateTx = useTransform(tilt.x, (v) => v * 5);
+  const plateTy = useTransform(tilt.y, (v) => v * 4);
+  const plateRotY = useTransform(tilt.x, (v) => v * 3);
+  const plateRotX = useTransform(tilt.y, (v) => -v * 3);
   const klass =
     tone === "red"
       ? "menu-card menu-card--red"
@@ -320,15 +345,30 @@ function MenuCard({
         }
       }}
     >
-      <motion.div layoutId={`plate-${item.id}`} className="pl-1 md:pl-2" transition={{ duration: 0.45, ease: EASE }}>
-        <PlateImage
-          src={item.image}
-          alt={item.name}
-          shape="round"
-          className="plate"
-          priority={priority}
-          sizes="(max-width: 640px) 220px, 260px"
-        />
+      <motion.div
+        layoutId={`plate-${item.id}`}
+        className="pl-1 md:pl-2"
+        transition={{ duration: 0.45, ease: EASE }}
+        style={{ perspective: 800 }}
+      >
+        <motion.div
+          style={{
+            x: plateTx,
+            y: plateTy,
+            rotateY: plateRotY,
+            rotateX: plateRotX,
+            transformStyle: "preserve-3d",
+          }}
+        >
+          <PlateImage
+            src={item.image}
+            alt={item.name}
+            shape="round"
+            className="plate"
+            priority={priority}
+            sizes="(max-width: 640px) 220px, 260px"
+          />
+        </motion.div>
       </motion.div>
       <div className="min-w-0 py-4 md:py-5 pr-2 relative">
         <motion.h3
