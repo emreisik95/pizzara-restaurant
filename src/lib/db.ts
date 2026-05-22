@@ -12,9 +12,26 @@ declare global {
 }
 
 export const db: Database.Database =
-  globalThis.__pizzara_db ?? (globalThis.__pizzara_db = new Database(dbPath));
+  globalThis.__pizzara_db ?? (globalThis.__pizzara_db = new Database(dbPath, { timeout: 10000 }));
 
-db.pragma("journal_mode = WAL");
+function withRetry<T>(fn: () => T, attempts = 5): T {
+  let lastErr: unknown;
+  for (let i = 0; i < attempts; i++) {
+    try {
+      return fn();
+    } catch (e) {
+      lastErr = e;
+      const code = (e as { code?: string }).code;
+      if (code !== "SQLITE_BUSY" && code !== "SQLITE_LOCKED") throw e;
+      const wait = 100 * (i + 1);
+      const end = Date.now() + wait;
+      while (Date.now() < end) {} // sync sleep — module init must be synchronous
+    }
+  }
+  throw lastErr;
+}
+
+withRetry(() => db.pragma("journal_mode = WAL"));
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS categories (
