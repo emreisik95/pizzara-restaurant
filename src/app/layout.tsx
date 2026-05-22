@@ -4,14 +4,14 @@ import "./globals.css";
 import { readTheme, themeCss } from "@/lib/theme";
 
 const display = Antonio({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });
 
 const serif = Cormorant_Garamond({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["500", "600", "700"],
   style: ["normal", "italic"],
   variable: "--font-serif",
@@ -19,7 +19,7 @@ const serif = Cormorant_Garamond({
 });
 
 const body = DM_Sans({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",
   display: "swap",
