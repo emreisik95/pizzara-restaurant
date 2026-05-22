@@ -135,7 +135,7 @@ export function MenuSection({
           </motion.div>
         </div>
 
-        <ul className="mt-10 md:mt-14 grid gap-5 md:gap-6 max-w-3xl mx-auto">
+        <ul className="mt-10 md:mt-14 grid gap-5 md:gap-6 lg:grid-cols-2 max-w-3xl lg:max-w-6xl mx-auto">
           <AnimatePresence mode="popLayout">
             {filtered.map((item, idx) => {
               const tone: Tone = CARD_TONES[idx % CARD_TONES.length];
@@ -155,7 +155,7 @@ export function MenuSection({
           </AnimatePresence>
           {filtered.length === 0 && (
             <motion.li
-              className="text-center py-12"
+              className="lg:col-span-2 text-center py-12"
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
