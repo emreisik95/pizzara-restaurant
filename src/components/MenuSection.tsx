@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import { tl } from "@/lib/format";
 import { Sparkle } from "./Sparkle";
 import { PlateImage } from "./PlateImage";
@@ -65,6 +66,9 @@ export function MenuSection({
 
   const chips = lightbox ? parseIngredients(lightbox.description) : [];
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <section id="menu" className="relative bg-crema-light text-ink py-20 md:py-28 grain">
       <div className="container-wrap">
@@ -95,7 +99,7 @@ export function MenuSection({
               show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
             }}
           >
-            <div className="flex w-max mx-auto gap-1 md:gap-2 px-7 sm:px-8">
+            <div className="flex w-max mx-auto gap-1 md:gap-2 px-12 sm:px-16">
               {categories.map((c) => {
                 const on = active === c.slug;
                 return (
@@ -157,10 +161,11 @@ export function MenuSection({
         </ul>
       </div>
 
+      {mounted && createPortal(
       <AnimatePresence>
         {lightbox && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -254,7 +259,9 @@ export function MenuSection({
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </section>
   );
 }
