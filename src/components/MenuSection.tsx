@@ -90,7 +90,7 @@ export function MenuSection({
 
         <div className="menu-tabs-sticky mt-10 -mx-5 px-0">
           <motion.div
-            className="overflow-x-auto no-scrollbar snap-x snap-mandatory py-3"
+            className="overflow-x-auto no-scrollbar snap-x snap-proximity scroll-pl-12 sm:scroll-pl-16 py-3"
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-40px" }}
