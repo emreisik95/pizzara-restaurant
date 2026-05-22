@@ -83,7 +83,7 @@ export function MenuSection({
             show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
           }}
         >
-        <div className="flex w-max mx-auto gap-1 md:gap-2 px-5">
+        <div className="flex w-max mx-auto gap-1 md:gap-2 px-7 sm:px-8">
           {categories.map((c) => {
             const on = active === c.slug;
             return (
@@ -250,14 +250,14 @@ function MenuCard({
       <div className="pl-1 md:pl-2">
         <PlateImage src={item.image} alt={item.name} shape="round" className="plate" />
       </div>
-      <div className="min-w-0 py-2 md:py-3 pr-2 relative">
+      <div className="min-w-0 py-4 md:py-5 pr-2 relative">
         <h3 className="font-display uppercase text-[clamp(1.3rem,4.2vw,2rem)] leading-[1.04] tracking-[0.005em]">
           {item.name}
         </h3>
-        <p className="mt-1 md:mt-2 text-[13px] md:text-sm leading-snug opacity-90 md:line-clamp-2 md:max-w-[42ch]">
+        <p className="mt-3 md:mt-3 text-[13px] md:text-sm leading-relaxed opacity-90 md:line-clamp-2 md:max-w-[42ch]">
           {item.description}
         </p>
-        <p className="mt-2 md:mt-3 font-display text-2xl md:text-3xl tracking-tight">
+        <p className="mt-4 md:mt-4 font-display text-2xl md:text-3xl tracking-tight">
           ₺{tl(item.price)}
         </p>
 
