@@ -25,6 +25,15 @@ const headVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
+function parseIngredients(desc: string): string[] {
+  if (!desc) return [];
+  const trimmed = desc.trim().replace(/\.$/, "");
+  return trimmed
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export function MenuSection({
   categories,
   items,
@@ -54,6 +63,8 @@ export function MenuSection({
     };
   }, [lightbox]);
 
+  const chips = lightbox ? parseIngredients(lightbox.description) : [];
+
   return (
     <section id="menu" className="relative bg-crema-light text-ink py-20 md:py-28 grain">
       <div className="container-wrap">
@@ -73,44 +84,46 @@ export function MenuSection({
           </p>
         </motion.div>
 
-        <motion.div
-          className="mt-10 overflow-x-auto no-scrollbar -mx-5 snap-x snap-mandatory"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
-          }}
-        >
-        <div className="flex w-max mx-auto gap-1 md:gap-2 px-7 sm:px-8">
-          {categories.map((c) => {
-            const on = active === c.slug;
-            return (
-              <motion.button
-                key={c.slug}
-                onClick={() => setActive(c.slug)}
-                className={`tab-pill shrink-0 snap-start relative ${on ? "tab-pill--active" : "tab-pill--idle"}`}
-                variants={{
-                  hidden: { opacity: 0, y: 12 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
-                }}
-                whileHover={reduce || on ? undefined : { y: -2 }}
-                whileTap={reduce ? undefined : { scale: 0.96 }}
-              >
-                {on && (
-                  <motion.span
-                    layoutId="tab-pill-bg"
-                    className="absolute inset-0 rounded-full bg-rosso -z-10"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-                <span className="relative">{c.name}</span>
-              </motion.button>
-            );
-          })}
+        <div className="menu-tabs-sticky mt-10 -mx-5 px-0">
+          <motion.div
+            className="overflow-x-auto no-scrollbar snap-x snap-mandatory py-3"
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-40px" }}
+            variants={{
+              hidden: {},
+              show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+            }}
+          >
+            <div className="flex w-max mx-auto gap-1 md:gap-2 px-7 sm:px-8">
+              {categories.map((c) => {
+                const on = active === c.slug;
+                return (
+                  <motion.button
+                    key={c.slug}
+                    onClick={() => setActive(c.slug)}
+                    className={`tab-pill shrink-0 snap-start relative ${on ? "tab-pill--active" : "tab-pill--idle"}`}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE } },
+                    }}
+                    whileHover={reduce || on ? undefined : { y: -2 }}
+                    whileTap={reduce ? undefined : { scale: 0.96 }}
+                  >
+                    {on && (
+                      <motion.span
+                        layoutId="tab-pill-bg"
+                        className="absolute inset-0 rounded-full bg-rosso -z-10"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative">{c.name}</span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </motion.div>
         </div>
-        </motion.div>
 
         <ul className="mt-10 md:mt-14 grid gap-5 md:gap-6 max-w-3xl mx-auto">
           <AnimatePresence mode="popLayout">
@@ -130,12 +143,15 @@ export function MenuSection({
           </AnimatePresence>
           {filtered.length === 0 && (
             <motion.li
-              className="text-center text-ink/60 py-10"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              className="text-center py-12"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
             >
-              Bu kategoride ürün yok.
+              <div className="mx-auto w-16 h-16 rounded-full bg-rosso/10 flex items-center justify-center mb-3">
+                <Sparkle size={20} className="text-rosso" />
+              </div>
+              <p className="font-serif italic text-lg text-ink/70">Bu menü bölümü henüz fırında</p>
             </motion.li>
           )}
         </ul>
@@ -148,51 +164,92 @@ export function MenuSection({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25 }}
             onClick={() => setLightbox(null)}
             role="dialog"
             aria-modal="true"
             aria-label={lightbox.name}
           >
-            <div className="absolute inset-0 bg-ink/70 backdrop-blur-sm" />
             <motion.div
-              className="relative w-full max-w-lg bg-crema-light text-ink rounded-3xl shadow-2xl overflow-hidden"
+              className="absolute inset-0 bg-ink/75 backdrop-blur-md"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.div
+              className="relative w-full max-w-md bg-crema-light text-ink rounded-[28px] shadow-2xl overflow-visible"
               initial={{ y: 30, scale: 0.96, opacity: 0 }}
               animate={{ y: 0, scale: 1, opacity: 1 }}
-              exit={{ y: 20, scale: 0.97, opacity: 0, transition: { duration: 0.18 } }}
-              transition={{ duration: 0.32, ease: EASE }}
+              exit={{ y: 20, scale: 0.97, opacity: 0, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.36, ease: EASE }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={() => setLightbox(null)}
                 aria-label="Kapat"
-                className="absolute right-3 top-3 z-10 h-9 w-9 rounded-full bg-ink/60 text-crema flex items-center justify-center hover:bg-ink/80 transition"
+                className="absolute right-3 top-3 z-20 h-9 w-9 rounded-full bg-ink/70 text-crema flex items-center justify-center hover:bg-ink/90 transition"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                   <path d="M6 6l12 12M6 18L18 6" />
                 </svg>
               </button>
 
-              <PlateImage
-                src={lightbox.image}
-                alt={lightbox.name}
-                shape="square"
-                className="aspect-[4/3] w-full"
-              />
+              <motion.div
+                layoutId={`plate-${lightbox.id}`}
+                className="relative -mt-16 mx-auto plate-lg"
+                transition={{ duration: 0.45, ease: EASE }}
+              >
+                <PlateImage src={lightbox.image} alt={lightbox.name} shape="round" className="w-full h-full" />
+              </motion.div>
 
-              <div className="p-5 sm:p-6">
-                <h3 className="font-display uppercase text-2xl sm:text-3xl leading-tight text-rosso">
+              <div className="px-6 pt-4 pb-6 sm:px-7 sm:pt-5 sm:pb-7 text-center">
+                <motion.h3
+                  layoutId={`name-${lightbox.id}`}
+                  className="font-display uppercase text-3xl sm:text-4xl leading-tight text-rosso"
+                  transition={{ duration: 0.45, ease: EASE }}
+                >
                   {lightbox.name}
-                </h3>
-                {lightbox.description && (
-                  <p className="mt-3 text-sm sm:text-base leading-relaxed text-ink/85">
-                    {lightbox.description}
-                  </p>
+                </motion.h3>
+
+                {chips.length > 1 ? (
+                  <motion.ul
+                    className="mt-4 flex flex-wrap justify-center gap-1.5"
+                    initial="hidden"
+                    animate="show"
+                    variants={{
+                      hidden: {},
+                      show: { transition: { staggerChildren: 0.04, delayChildren: 0.15 } },
+                    }}
+                  >
+                    {chips.map((c, i) => (
+                      <motion.li
+                        key={i}
+                        className="px-3 py-1 rounded-full bg-bosco/10 text-bosco-dark text-xs font-medium tracking-wide"
+                        variants={{
+                          hidden: { opacity: 0, y: 6 },
+                          show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: EASE } },
+                        }}
+                      >
+                        {c}
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+                ) : (
+                  lightbox.description && (
+                    <p className="mt-3 text-sm sm:text-base leading-relaxed text-ink/80">
+                      {lightbox.description}
+                    </p>
+                  )
                 )}
-                <p className="mt-4 font-display text-3xl sm:text-4xl tracking-tight text-bosco">
+
+                <motion.p
+                  layoutId={`price-${lightbox.id}`}
+                  className="mt-5 font-display text-4xl tracking-tight text-bosco"
+                  transition={{ duration: 0.45, ease: EASE }}
+                >
                   ₺{tl(lightbox.price)}
-                </p>
+                </motion.p>
               </div>
             </motion.div>
           </motion.div>
@@ -227,7 +284,7 @@ function MenuCard({
   return (
     <motion.li
       layout
-      className={`${klass} cursor-pointer`}
+      className={`${klass} cursor-pointer group`}
       initial={{ opacity: 0, y: 18, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 8, scale: 0.96, transition: { duration: 0.18 } }}
@@ -247,19 +304,27 @@ function MenuCard({
         }
       }}
     >
-      <div className="pl-1 md:pl-2">
+      <motion.div layoutId={`plate-${item.id}`} className="pl-1 md:pl-2" transition={{ duration: 0.45, ease: EASE }}>
         <PlateImage src={item.image} alt={item.name} shape="round" className="plate" />
-      </div>
+      </motion.div>
       <div className="min-w-0 py-4 md:py-5 pr-2 relative">
-        <h3 className="font-display uppercase text-[clamp(1.3rem,4.2vw,2rem)] leading-[1.04] tracking-[0.005em]">
+        <motion.h3
+          layoutId={`name-${item.id}`}
+          className="font-display uppercase text-[clamp(1.3rem,4.2vw,2rem)] leading-[1.04] tracking-[0.005em]"
+          transition={{ duration: 0.45, ease: EASE }}
+        >
           {item.name}
-        </h3>
+        </motion.h3>
         <p className="mt-3 md:mt-3 text-[13px] md:text-sm leading-relaxed opacity-90 md:line-clamp-2 md:max-w-[42ch]">
           {item.description}
         </p>
-        <p className="mt-4 md:mt-4 font-display text-2xl md:text-3xl tracking-tight">
+        <motion.p
+          layoutId={`price-${item.id}`}
+          className="mt-4 md:mt-4 font-display text-2xl md:text-3xl tracking-tight"
+          transition={{ duration: 0.45, ease: EASE }}
+        >
           ₺{tl(item.price)}
-        </p>
+        </motion.p>
 
         <motion.span
           aria-hidden

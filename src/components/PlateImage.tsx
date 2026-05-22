@@ -13,10 +13,11 @@ export function PlateImage({ src, alt, shape = "round", className = "" }: Props)
   const [errored, setErrored] = useState(false);
   const showImg = src && !errored;
   const radius = shape === "round" ? "rounded-full" : "rounded-2xl";
+  const initial = alt?.trim()?.charAt(0)?.toUpperCase() ?? "?";
 
   return (
     <div
-      className={`relative overflow-hidden ${radius} ${className}`}
+      className={`plate-surface relative overflow-hidden ${radius} ${className}`}
       style={{
         background:
           "radial-gradient(130% 130% at 30% 22%, rgba(255,255,255,0.08) 0%, rgba(20,12,8,0.32) 32%, rgba(20,12,8,0.55) 100%)",
@@ -25,13 +26,21 @@ export function PlateImage({ src, alt, shape = "round", className = "" }: Props)
       }}
       aria-label={alt}
     >
-      {showImg && (
+      {showImg ? (
         <img
           src={src!}
           alt={alt}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="plate-img absolute inset-0 h-full w-full object-cover"
           onError={() => setErrored(true)}
         />
+      ) : (
+        <span
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-center font-display text-crema/80 select-none"
+          style={{ fontSize: "min(58%, 5rem)", letterSpacing: "0.02em", textShadow: "0 2px 12px rgba(0,0,0,0.45)" }}
+        >
+          {initial}
+        </span>
       )}
     </div>
   );
