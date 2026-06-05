@@ -17,7 +17,7 @@ RUN test -n "$(ls -A .next/static/chunks)" && test -n "$(ls -A .next/static/css)
 
 FROM node:22-alpine AS runner
 WORKDIR /app
-RUN apk add --no-cache libstdc++
+RUN apk add --no-cache libstdc++ curl
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
@@ -45,6 +45,6 @@ VOLUME ["/data", "/app/public/uploads"]
 # Verify static assets are actually served, not just that the process is up.
 # A broken build fails this -> Coolify keeps the old container (auto-rollback).
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:3000/api/health || exit 1
+  CMD curl -fsS http://127.0.0.1:3000/api/health || exit 1
 
 CMD ["node", "server.js"]
