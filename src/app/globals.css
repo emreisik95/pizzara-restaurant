@@ -533,14 +533,10 @@ button:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 .menu-item-description {
-  display: -webkit-box;
-  overflow: hidden;
   margin-top: 10px;
   color: rgba(30, 20, 16, 0.65);
   font-size: 12px;
   line-height: 1.48;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 .fallback-photo-label {
   position: absolute;
