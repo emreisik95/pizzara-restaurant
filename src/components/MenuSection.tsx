@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "motion/react";
 import { tl } from "@/lib/format";
 import { PlateImage } from "./PlateImage";
@@ -32,7 +33,12 @@ export function MenuSection({
   items: ItemDTO[];
 }) {
   const [active, setActive] = useState(ALL_CATEGORY);
+  const [selectedItem, setSelectedItem] = useState<ItemDTO | null>(null);
+  const [mounted, setMounted] = useState(false);
   const reduce = useReducedMotion();
+  const detailRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
 
   const categoryNames = useMemo(
     () => new Map(categories.map((category) => [category.slug, category.name])),
@@ -57,6 +63,51 @@ export function MenuSection({
     }
   }, [categories]);
 
+  useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (!selectedItem) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedItem(null);
+        return;
+      }
+      if (event.key !== "Tab" || !detailRef.current) return;
+
+      const focusable = Array.from(
+        detailRef.current.querySelectorAll<HTMLElement>("button, a[href], [tabindex]:not([tabindex='-1'])")
+      ).filter((element) => !element.hasAttribute("disabled"));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      returnFocusRef.current?.focus();
+    };
+  }, [selectedItem]);
+
+  function openItem(item: ItemDTO) {
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    setSelectedItem(item);
+  }
+
   function selectCategory(slug: string) {
     setActive(slug);
     const url = new URL(window.location.href);
@@ -66,6 +117,7 @@ export function MenuSection({
   }
 
   return (
+    <>
     <section id="menu" aria-labelledby="menu-title" className="menu-section grain">
       <div className="container-wrap relative z-10">
         <motion.header
@@ -133,6 +185,7 @@ export function MenuSection({
                 categoryName={categoryNames.get(item.category_slug) ?? item.category_slug}
                 index={index}
                 reduce={reduce}
+                onOpen={() => openItem(item)}
               />
             ))}
           </AnimatePresence>
@@ -149,6 +202,21 @@ export function MenuSection({
         </motion.ul>
       </div>
     </section>
+    {mounted && createPortal(
+      <AnimatePresence>
+        {selectedItem && (
+          <MenuDetail
+            item={selectedItem}
+            categoryName={categoryNames.get(selectedItem.category_slug) ?? selectedItem.category_slug}
+            detailRef={detailRef}
+            closeButtonRef={closeButtonRef}
+            onClose={() => setSelectedItem(null)}
+          />
+        )}
+      </AnimatePresence>,
+      document.body
+    )}
+    </>
   );
 }
 
@@ -157,11 +225,13 @@ function MenuItem({
   categoryName,
   index,
   reduce,
+  onOpen,
 }: {
   item: ItemDTO;
   categoryName: string;
   index: number;
   reduce: boolean | null;
+  onOpen: () => void;
 }) {
   return (
     <motion.li
@@ -193,8 +263,95 @@ function MenuItem({
           {item.description.trim() && (
             <p className="menu-item-description text-pretty">{item.description}</p>
           )}
+          <span className="menu-item-detail-cue" aria-hidden>
+            Detayı Gör <span>↗</span>
+          </span>
         </div>
+        <button
+          type="button"
+          className="menu-item-open"
+          onClick={onOpen}
+          aria-label={`${item.name} ayrıntılarını görüntüle`}
+        >
+          <span className="sr-only">{item.name} ayrıntılarını görüntüle</span>
+        </button>
       </article>
     </motion.li>
+  );
+}
+
+function MenuDetail({
+  item,
+  categoryName,
+  detailRef,
+  closeButtonRef,
+  onClose,
+}: {
+  item: ItemDTO;
+  categoryName: string;
+  detailRef: React.RefObject<HTMLDivElement>;
+  closeButtonRef: React.RefObject<HTMLButtonElement>;
+  onClose: () => void;
+}) {
+  const titleId = `menu-detail-title-${item.id}`;
+  const descriptionId = `menu-detail-description-${item.id}`;
+
+  return (
+    <motion.div
+      className="menu-detail-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClose}
+    >
+      <motion.div
+        ref={detailRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={item.description.trim() ? descriptionId : undefined}
+        className="menu-detail-sheet"
+        initial={{ opacity: 0, y: 36, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 24, scale: 0.98 }}
+        transition={{ duration: 0.3, ease: EASE }}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          ref={closeButtonRef}
+          type="button"
+          onClick={onClose}
+          className="menu-detail-close"
+          aria-label="Ürün ayrıntılarını kapat"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18" />
+          </svg>
+        </button>
+
+        <div className="menu-detail-grid">
+          <PlateImage
+            src={item.image}
+            alt={item.name}
+            shape="square"
+            className="menu-detail-photo"
+            sizes="(max-width: 767px) calc(100vw - 48px), 430px"
+            fallbackLabel="Fotoğraf yakında"
+          />
+          <div className="menu-detail-copy">
+            <p className="menu-detail-category">{categoryName}</p>
+            <h3 id={titleId} className="menu-detail-title text-balance">{item.name}</h3>
+            <p className="menu-detail-price">₺{tl(item.price)}</p>
+            {item.description.trim() && (
+              <p id={descriptionId} className="menu-detail-description text-pretty">{item.description}</p>
+            )}
+            <button type="button" onClick={onClose} className="menu-detail-return">
+              Menüye Dön
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 }
