@@ -45,7 +45,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <style dangerouslySetInnerHTML={{ __html: themeCss(theme) }} />
       </head>
-      <body className="min-h-screen">{children}</body>
+      <body className="min-h-screen">
+        <a href="#main-content" className="skip-link">İçeriğe geç</a>
+        {children}
+      </body>
     </html>
   );
 }

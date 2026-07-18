@@ -15,6 +15,10 @@ export default function Home() {
 
   const brand = getSetting("hero_eyebrow", "PIZZARA RESTAURANT");
   const reservationEnabled = getSetting("reservation_enabled", "1") === "1";
+  const address = getSetting("address", "İstanbul");
+  const phone = getSetting("phone", "+90 000 000 00 00");
+  const instagram = getSetting("instagram", "@pizzararestaurant");
+  const hours = getSetting("hours", "Her gün 12:00 - 23:00");
   const hero = {
     eyebrow: brand,
     title: getSetting("hero_title", "İYİ MALZEME\nGERÇEK LEZZET"),
@@ -23,12 +27,14 @@ export default function Home() {
       "Taze malzeme, ustaca dokunuş. Her tabakta gerçek İtalyan ruhu."
     ),
     image: getSetting("hero_image", "/placeholder/hero.jpg"),
+    hours,
+    reservationEnabled,
   };
 
   return (
     <>
       <Header brand={brand} reservationEnabled={reservationEnabled} />
-      <main>
+      <main id="main-content">
         <Hero {...hero} />
         <MenuSection
           categories={categories.map((c) => ({ slug: c.slug, name: c.name }))}
@@ -45,10 +51,10 @@ export default function Home() {
       </main>
       <Footer
         brand={brand}
-        address={getSetting("address", "İstanbul")}
-        phone={getSetting("phone", "+90 000 000 00 00")}
-        instagram={getSetting("instagram", "@pizzararestaurant")}
-        hours={getSetting("hours", "Her gün 12:00 - 23:00")}
+        address={address}
+        phone={phone}
+        instagram={instagram}
+        hours={hours}
       />
     </>
   );
