@@ -41,7 +41,7 @@ export function PlateImage({
           priority={priority}
           sizes={sizes ?? "(max-width: 640px) 220px, 260px"}
           quality={86}
-          className="plate-img object-cover"
+          className="plate-img object-contain"
           onError={() => setErrored(true)}
         />
       ) : (

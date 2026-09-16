@@ -615,8 +615,11 @@ button:focus-visible {
 }
 .menu-item-photo {
   width: 82px;
-  height: 96px;
+  height: 82px;
   border-radius: 8px !important;
+}
+.menu-item-photo .plate-img {
+  padding: 4px;
 }
 .photo-placeholder {
   width: 100%;
@@ -859,7 +862,7 @@ button:focus-visible {
   }
   .menu-item-photo {
     width: 100px;
-    height: 112px;
+    height: 100px;
   }
   .menu-item-title {
     font-size: 19px;
@@ -892,7 +895,7 @@ button:focus-visible {
   }
   .menu-item-photo {
     width: 120px;
-    height: 125px;
+    height: 120px;
   }
 }
 @media (max-width: 767px) {
@@ -954,7 +957,7 @@ button:focus-visible {
   }
   .menu-item-photo {
     width: 65px;
-    height: 82px;
+    height: 65px;
   }
   .menu-item-title {
     font-size: 14px;
@@ -1022,6 +1025,9 @@ button:focus-visible {
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 27px 27px 0 0;
+}
+.menu-detail-photo .plate-img {
+  padding: 12px;
 }
 .menu-detail-copy {
   padding: 24px 22px 26px;
