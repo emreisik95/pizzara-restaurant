@@ -26,6 +26,7 @@ export function PlateImage({
   const showImage =
     Boolean(src) && !src?.startsWith("/placeholder/") && !errored;
   const radius = shape === "round" ? "rounded-full" : "rounded-[20px]";
+  const fit = shape === "round" ? "object-cover" : "object-contain";
 
   return (
     <div
@@ -41,7 +42,7 @@ export function PlateImage({
           priority={priority}
           sizes={sizes ?? "(max-width: 640px) 220px, 260px"}
           quality={86}
-          className="plate-img object-contain"
+          className={`plate-img ${fit}`}
           onError={() => setErrored(true)}
         />
       ) : (

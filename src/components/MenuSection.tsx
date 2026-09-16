@@ -355,7 +355,7 @@ function MenuItem({
         <PlateImage
           src={item.image}
           alt={item.name}
-          shape="square"
+          shape="round"
           className="menu-item-photo"
           sizes="(max-width: 640px) 108px, 156px"
           fallbackLabel="Fotoğraf yakında"
@@ -453,9 +453,9 @@ function MenuDetail({
           <PlateImage
             src={item.image}
             alt={item.name}
-            shape="square"
+            shape="round"
             className="menu-detail-photo"
-            sizes="(max-width: 767px) calc(100vw - 48px), 430px"
+            sizes="(max-width: 767px) 320px, 460px"
             fallbackLabel="Fotoğraf yakında"
           />
           <div className="menu-detail-copy">
