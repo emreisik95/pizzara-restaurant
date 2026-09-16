@@ -170,7 +170,7 @@ export function MenuSection({
             </div>
             <div className="menu-intro-copy">
               <p className="menu-intro-description">
-                Canın ne çekiyorsa. Pizzalar, makarnalar ve sofrayı tamamlayan
+                Canın ne çekiyorsa. Pizzalar ve sofrayı tamamlayan
                 küçük mutluluklar.
               </p>
               <div className="menu-facts" aria-label="Menü bilgileri">

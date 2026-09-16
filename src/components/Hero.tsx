@@ -130,7 +130,7 @@ export function Hero({
       <div className="trattoria-strip" aria-hidden>
         <span>PIZZA</span>
         <i>e</i>
-        <span>PASTA</span>
+        <span>PANUOZZO</span>
         <i>e</i>
         <span>BUONA VITA</span>
         <span className="strip-star">✳</span>
@@ -138,7 +138,7 @@ export function Hero({
         <span className="strip-star">✳</span>
         <span>PIZZA</span>
         <i>e</i>
-        <span>PASTA</span>
+        <span>PANUOZZO</span>
         <i>e</i>
         <span>BUONA VITA</span>
       </div>
