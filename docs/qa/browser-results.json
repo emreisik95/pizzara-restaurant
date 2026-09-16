@@ -1,0 +1,84 @@
+[
+  {
+    "width": 360,
+    "height": 740,
+    "status": "passed",
+    "checks": [
+      "overflow",
+      "CTA above fold",
+      "search",
+      "Turkish search",
+      "category filtering",
+      "deep links",
+      "dish dialog focus trap",
+      "Escape + focus restoration",
+      "reservation focus trap",
+      "reduced motion",
+      "loaded hero image",
+      "no page errors"
+    ]
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "status": "passed",
+    "checks": [
+      "overflow",
+      "CTA above fold",
+      "search",
+      "Turkish search",
+      "category filtering",
+      "deep links",
+      "dish dialog focus trap",
+      "Escape + focus restoration",
+      "reservation focus trap",
+      "reduced motion",
+      "loaded hero image",
+      "no page errors"
+    ]
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "status": "passed",
+    "checks": [
+      "overflow",
+      "CTA above fold",
+      "search",
+      "Turkish search",
+      "category filtering",
+      "deep links",
+      "dish dialog focus trap",
+      "Escape + focus restoration",
+      "reservation focus trap",
+      "reduced motion",
+      "loaded hero image",
+      "no page errors"
+    ]
+  },
+  {
+    "width": 1440,
+    "height": 1000,
+    "status": "passed",
+    "checks": [
+      "overflow",
+      "CTA above fold",
+      "search",
+      "Turkish search",
+      "category filtering",
+      "deep links",
+      "dish dialog focus trap",
+      "Escape + focus restoration",
+      "reservation focus trap",
+      "reduced motion",
+      "loaded hero image",
+      "no page errors"
+    ]
+  },
+  {
+    "reservationResponseUI": "success and failure passed with intercepted responses; no reservation created"
+  },
+  {
+    "serverRenderedContent": "hero and full menu available without JavaScript"
+  }
+]

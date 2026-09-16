@@ -23,7 +23,8 @@ export function PlateImage({
   fallbackLabel,
 }: Props) {
   const [errored, setErrored] = useState(false);
-  const showImage = Boolean(src) && !errored;
+  const showImage =
+    Boolean(src) && !src?.startsWith("/placeholder/") && !errored;
   const radius = shape === "round" ? "rounded-full" : "rounded-[20px]";
 
   return (
@@ -44,24 +45,19 @@ export function PlateImage({
           onError={() => setErrored(true)}
         />
       ) : (
-        <>
-          <Image
-            src="/placeholder/menu-placeholder.webp"
-            alt=""
-            fill
-            priority={priority}
-            sizes={sizes ?? "(max-width: 640px) 220px, 260px"}
-            quality={72}
-            className="object-cover scale-110 blur-[2px] saturate-[0.7] brightness-[0.62]"
-          />
-          <span className="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/10 to-transparent" aria-hidden />
-          {fallbackLabel && (
-            <span className="fallback-photo-label">
-              <span className="fallback-photo-mark" aria-hidden>✦</span>
-              {fallbackLabel}
-            </span>
-          )}
-        </>
+        <div className="photo-placeholder" aria-hidden="true">
+          <svg
+            viewBox="0 0 80 80"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.2"
+          >
+            <circle cx="40" cy="40" r="27" />
+            <circle cx="40" cy="40" r="21" />
+            <path d="M5 18v15m4-15v15m4-15v15M5 30q4 10 8 0M9 37v25M72 18v44m0-44q-10 15 0 22" />
+          </svg>
+          {fallbackLabel && <span>Fotoğraf yakında</span>}
+        </div>
       )}
     </div>
   );

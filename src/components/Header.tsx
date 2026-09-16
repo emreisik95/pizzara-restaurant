@@ -1,104 +1,96 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
 
-const BASE_NAV: Array<[string, string]> = [
-  ["#hero", "Anasayfa"],
-  ["#menu", "Menü"],
-  ["#reservation", "Rezervasyon"],
-  ["#contact", "İletişim"],
-];
-
-export function Header({ brand, reservationEnabled = true }: { brand: string; reservationEnabled?: boolean }) {
+export function Header({
+  brand,
+  reservationEnabled = true,
+}: {
+  brand: string;
+  reservationEnabled?: boolean;
+}) {
   const [open, setOpen] = useState(false);
-  const NAV = reservationEnabled
-    ? BASE_NAV
-    : BASE_NAV.filter(([href]) => href !== "#reservation");
+  const toggle = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggle.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
+  }, [open]);
+  const links = [
+    ["#menu", "Menü"],
+    ...(reservationEnabled ? [["#reservation", "Rezervasyon"]] : []),
+    ["#contact", "İletişim"],
+  ];
   return (
-    <motion.header
-      className="site-header grain"
-      initial={{ y: -24, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <header className="site-header">
       <div className="container-wrap site-header-inner">
-        <Link
-          href="/"
-          className="site-brand focus-visible-ring"
-          aria-label={`${brand} anasayfa`}
-        >
-          <span className="md:hidden">{brand.split(/\s+/)[0]}</span>
-          <span className="hidden md:inline-flex items-center gap-2">
-            <Mark className="text-crema" />
-            {brand}
-          </span>
+        <Link href="/" className="site-brand" aria-label={`${brand} anasayfa`}>
+          <span>{brand.split(/\s+/)[0].toLocaleLowerCase("tr")}</span>
         </Link>
-        <nav className="hidden md:flex items-center gap-7 text-[11px] uppercase tracking-[0.28em] font-semibold" aria-label="Ana navigasyon">
-          {NAV.map(([href, label]) => (
-            <motion.a
-              key={href}
-              href={href}
-              className="relative rounded-sm hover:text-white focus-visible-ring"
-              whileHover={{ y: -2 }}
-              transition={{ duration: 0.2 }}
-            >
+        <span className="header-caption">İYİ MALZEME, GERÇEK LEZZET.</span>
+        <nav className="desktop-nav" aria-label="Ana navigasyon">
+          {links.map(([href, label]) => (
+            <a key={href} href={href}>
               {label}
-            </motion.a>
+              <span aria-hidden>↗</span>
+            </a>
           ))}
         </nav>
-        <div className="md:hidden flex items-center gap-1.5">
-          <a href="#menu" className="mobile-menu-cta focus-visible-ring">Menü</a>
+        <div className="mobile-header-actions">
+          <a
+            href="#menu"
+            className="mobile-menu-cta"
+            onClick={() => setOpen(false)}
+          >
+            Menü <span aria-hidden>↘</span>
+          </a>
           <button
+            ref={toggle}
             type="button"
             aria-label={open ? "Navigasyonu kapat" : "Navigasyonu aç"}
             aria-expanded={open}
             aria-controls="mobile-navigation"
-            onClick={() => setOpen((v) => !v)}
-            className="mobile-nav-toggle focus-visible-ring"
+            onClick={() => setOpen(!open)}
+            className="mobile-nav-toggle"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden>
-              {open ? <><path d="M6 6l12 12" /><path d="M18 6L6 18" /></> : <><path d="M4 8h16" /><path d="M4 16h16" /></>}
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              aria-hidden
+            >
+              {open ? (
+                <path d="m6 6 12 12M6 18 18 6" />
+              ) : (
+                <path d="M4 8h16M4 16h16" />
+              )}
             </svg>
           </button>
         </div>
       </div>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.nav
-            id="mobile-navigation"
-            className="mobile-navigation container-wrap"
-            aria-label="Mobil navigasyon"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            {NAV.map(([href, label]) => (
-              <a
-                key={href}
-                href={href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-3 py-3.5 hover:bg-crema/10 focus-visible-ring"
-              >
-                {label}
-              </a>
-            ))}
-          </motion.nav>
-        )}
-      </AnimatePresence>
-    </motion.header>
-  );
-}
-
-function Mark({ className = "" }: { className?: string }) {
-  return (
-    <svg width="26" height="26" viewBox="0 0 32 32" className={className} aria-hidden="true">
-      <circle cx="16" cy="16" r="14" fill="currentColor" opacity="0.14" />
-      <path d="M16 4 L27 22 L5 22 Z" fill="currentColor" />
-      <circle cx="12" cy="17" r="1.4" fill="#a82622" />
-      <circle cx="18" cy="15" r="1.4" fill="#a82622" />
-      <circle cx="16" cy="20" r="1.3" fill="#a82622" />
-    </svg>
+      {open && (
+        <nav
+          id="mobile-navigation"
+          className="mobile-navigation container-wrap"
+          aria-label="Mobil navigasyon"
+        >
+          {links.map(([href, label]) => (
+            <a key={href} href={href} onClick={() => setOpen(false)}>
+              {label}
+              <span aria-hidden>↗</span>
+            </a>
+          ))}
+        </nav>
+      )}
+    </header>
   );
 }

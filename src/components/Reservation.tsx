@@ -1,90 +1,66 @@
 "use client";
-import { useState } from "react";
-import { Sparkle } from "./Sparkle";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type Variants,
-} from "motion/react";
-import { useRef } from "react";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
-const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
-};
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-};
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export function Reservation() {
   const [open, setOpen] = useState(false);
-  const reduce = useReducedMotion();
+  const trigger = useRef<HTMLButtonElement>(null);
   return (
-    <section id="reservation" className="relative bg-rosso text-crema grain overflow-hidden">
-      <motion.div
-        className="absolute top-8 right-[28%]"
-        animate={reduce ? undefined : { scale: [0.7, 1, 0.7], opacity: [0.5, 1, 0.5] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Sparkle size={18} className="text-crema/80" rotate={20} />
-      </motion.div>
-      <motion.div
-        className="absolute bottom-10 left-[20%]"
-        animate={reduce ? undefined : { scale: [0.6, 1, 0.6], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ duration: 3.0, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-      >
-        <Sparkle size={14} className="text-crema/70" rotate={45} />
-      </motion.div>
-      <motion.div
-        className="absolute top-1/2 right-[12%]"
-        animate={reduce ? undefined : { scale: [0.7, 1, 0.7], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-      >
-        <Sparkle size={22} className="text-crema/70" />
-      </motion.div>
-
-      <motion.div
-        className="container-wrap relative z-10 grid md:grid-cols-2 items-center gap-10 py-20 md:py-28"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-80px" }}
-        variants={stagger}
-      >
-        <div className="max-w-lg">
-          <motion.h2 className="section-title uppercase" variants={fadeUp}>
-            Bir Masa Ayırtın
-          </motion.h2>
-          <motion.p
-            className="font-serif italic text-lg md:text-xl mt-3 text-crema/90 max-w-md"
-            variants={fadeUp}
+    <section id="reservation" className="reservation-section">
+      <div className="container-wrap reservation-layout">
+        <div>
+          <p className="reservation-kicker">BİRLİKTE DAHA GÜZEL</p>
+          <h2>
+            Sofrada sana
+            <br />
+            da yer var.
+          </h2>
+          <p className="reservation-description">
+            Sevdiklerini al, soframıza gel.
+            <br />
+            Gerisini bize bırak.
+          </p>
+          <button
+            ref={trigger}
+            type="button"
+            className="reservation-cta"
+            onClick={() => setOpen(true)}
           >
-            Lezzet dolu bir deneyim için sizi bekliyoruz.
-          </motion.p>
-          <motion.div className="mt-7 md:mt-9" variants={fadeUp}>
-            <motion.button
-              onClick={() => setOpen(true)}
-              className="pill-cta pill-cta--outline-cream"
-              whileHover={reduce ? undefined : { scale: 1.03 }}
-              whileTap={reduce ? undefined : { scale: 0.97 }}
-              transition={{ duration: 0.25, ease: EASE }}
-            >
-              Rezervasyon Yap
-            </motion.button>
-          </motion.div>
+            Masa ayırt <span aria-hidden>↗</span>
+          </button>
         </div>
-
-        <TableArt />
-      </motion.div>
-
-      <AnimatePresence>
-        {open && <ReservationDialog onClose={() => setOpen(false)} />}
-      </AnimatePresence>
+        <div className="table-illustration" aria-hidden>
+          <svg
+            viewBox="0 0 400 300"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <ellipse cx="200" cy="140" rx="120" ry="42" />
+            <path d="M80 140v16c0 24 54 42 120 42s120-18 120-42v-16M195 198v66m10-66v66m-40 6q35-15 70 0" />
+            <ellipse cx="151" cy="135" rx="25" ry="11" />
+            <ellipse cx="151" cy="135" rx="18" ry="7" />
+            <ellipse cx="250" cy="152" rx="25" ry="11" />
+            <ellipse cx="250" cy="152" rx="18" ry="7" />
+            <path d="M202 112v-35m-12 0h24l-5 23h-15zM190 114h24M132 112l-10-20m0 0-3-5m6 3-3-6M277 131l8-20M64 165c-8-70-46-67-42 8m0 0q20 20 42-8M26 176l-8 72m42-78 15 65M337 181c-2-60 43-71 44-5m-44 5q23 20 44-5" />
+            <path d="M343 192l-7 65m40-67 12 65M102 74q20-25 40-7M283 71q11-8 20 0" />
+          </svg>
+          <span>A tavola!</span>
+        </div>
+      </div>
+      {open &&
+        createPortal(
+          <ReservationDialog
+            onClose={() => {
+              setOpen(false);
+              requestAnimationFrame(() => trigger.current?.focus());
+            }}
+          />,
+          document.body,
+        )}
     </section>
   );
 }
@@ -92,182 +68,173 @@ export function Reservation() {
 function ReservationDialog({ onClose }: { onClose: () => void }) {
   const [state, setState] = useState<"idle" | "sending" | "ok" | "err">("idle");
   const [msg, setMsg] = useState("");
+  const dialog = useRef<HTMLDivElement>(null);
+  const close = useRef<HTMLButtonElement>(null);
+  const done = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (state === "ok") done.current?.focus();
+  }, [state]);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+  useEffect(() => {
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    close.current?.focus();
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") onCloseRef.current();
+      if (event.key !== "Tab") return;
+      const elements = Array.from(
+        dialog.current?.querySelectorAll<HTMLElement>(
+          "button:not(:disabled), input, a[href]",
+        ) ?? [],
+      );
+      const first = elements[0],
+        last = elements[elements.length - 1];
+      if (!dialog.current?.contains(document.activeElement)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first)?.focus();
+      } else if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
     setState("sending");
     setMsg("");
     try {
-      const r = await fetch("/api/reservations", {
+      const response = await fetch("/api/reservations", {
         method: "POST",
-        body: JSON.stringify(Object.fromEntries(fd)),
         headers: { "content-type": "application/json" },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
       });
-      if (!r.ok) throw new Error((await r.json()).error || "Hata");
+      const body = await response.json();
+      if (!response.ok)
+        throw new Error(
+          body.error || "Talebiniz gönderilemedi. Lütfen tekrar deneyin.",
+        );
       setState("ok");
-      setMsg("Rezervasyon talebiniz alındı. Sizi en kısa sürede arayacağız.");
-      (e.target as HTMLFormElement).reset();
-    } catch (err: unknown) {
+      setMsg("Rezervasyon talebiniz alındı. Onay için sizi arayacağız.");
+      form.reset();
+    } catch (error) {
       setState("err");
-      setMsg(err instanceof Error ? err.message : "Bir hata oluştu.");
+      setMsg(
+        error instanceof Error
+          ? error.message
+          : "Bağlantı kurulamadı. Lütfen tekrar deneyin.",
+      );
     }
   }
-
   return (
-    <motion.div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-[60] flex items-end md:items-center justify-center bg-bosco-900/60 backdrop-blur-sm p-4"
-      onClick={(e) => e.target === e.currentTarget && onClose()}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.25 }}
-    >
-      <motion.div
-        className="bg-crema text-ink w-full max-w-md rounded-3xl p-6 md:p-8 shadow-card grain"
-        initial={{ opacity: 0, y: 30, scale: 0.96 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 20, scale: 0.97, transition: { duration: 0.2 } }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="font-display text-3xl uppercase text-rosso">Rezervasyon</h3>
-          <button onClick={onClose} aria-label="Kapat" className="h-9 w-9 rounded-full hover:bg-ink/10 inline-flex items-center justify-center">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>
-          </button>
-        </div>
-        <motion.form
-          onSubmit={onSubmit}
-          className="mt-4 grid gap-3 text-left"
-          initial="hidden"
-          animate="show"
-          variants={{
-            hidden: {},
-            show: { transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
-          }}
-        >
-          <Field label="Ad Soyad" name="name" required />
-          <Field label="Telefon" name="phone" type="tel" required />
-          <motion.div
-            className="grid grid-cols-2 gap-3"
-            variants={{
-              hidden: { opacity: 0, y: 12 },
-              show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-            }}
-          >
-            <Field label="Tarih & Saat" name="date" type="datetime-local" required noVariant />
-            <Field label="Kişi" name="guests" type="number" min={1} max={20} defaultValue={2} required noVariant />
-          </motion.div>
-          <Field label="Not (opsiyonel)" name="note" />
-          <motion.button
-            disabled={state === "sending"}
-            className="pill-cta pill-cta--red mt-2 w-full justify-center disabled:opacity-60"
-            type="submit"
-            variants={{
-              hidden: { opacity: 0, y: 10, scale: 0.97 },
-              show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
-            }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            {state === "sending" ? "Gönderiliyor..." : "Onayla"}
-          </motion.button>
-          {msg && (
-            <motion.p
-              role="status"
-              aria-live="polite"
-              className={`text-sm mt-1 text-center ${state === "ok" ? "text-bosco-700" : "text-rosso-700"}`}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {msg}
-            </motion.p>
-          )}
-        </motion.form>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-function Field({
-  label, name, type = "text", required, min, max, defaultValue, noVariant,
-}: {
-  label: string; name: string; type?: string; required?: boolean; min?: number; max?: number; defaultValue?: string | number; noVariant?: boolean;
-}) {
-  const inner = (
-    <label className="block">
-      <span className="block text-[11px] tracking-[0.22em] uppercase font-semibold text-ink/70 mb-1">{label}</span>
-      <input
-        name={name}
-        type={type}
-        required={required}
-        min={min}
-        max={max}
-        defaultValue={defaultValue}
-        className="w-full rounded-xl bg-white/70 border border-ink/15 px-3.5 py-3 text-base outline-none focus:border-rosso focus:ring-2 focus:ring-rosso/30 transition-shadow"
-      />
-    </label>
-  );
-  if (noVariant) return inner;
-  return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 12 },
-        show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
+    <div
+      className="reservation-backdrop"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
       }}
     >
-      {inner}
-    </motion.div>
-  );
-}
-
-function TableArt() {
-  const ref = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [30, -30]);
-  return (
-    <motion.div
-      ref={ref}
-      className="relative h-48 md:h-64 text-crema/85"
-      style={{ y }}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <svg viewBox="0 0 400 280" className="absolute inset-0 h-full w-full" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        {/* left chair — hoop back + seat + legs */}
-        <path d="M60 130 C 60 70, 130 70, 130 130" />
-        <path d="M68 130 C 68 80, 122 80, 122 130" />
-        <ellipse cx="95" cy="148" rx="40" ry="8" />
-        <path d="M65 152 L 50 230" />
-        <path d="M125 152 L 140 230" />
-        <path d="M88 156 L 80 240" />
-        <path d="M102 156 L 110 240" />
-        <path d="M45 232 L 145 232" />
-        {/* center table — round top, pedestal, oval base */}
-        <ellipse cx="200" cy="110" rx="46" ry="10" />
-        <path d="M155 112 C 175 130, 175 130, 195 132" />
-        <path d="M245 112 C 225 130, 225 130, 205 132" />
-        <path d="M198 132 L 198 220" />
-        <path d="M202 132 L 202 220" />
-        <ellipse cx="200" cy="225" rx="34" ry="7" />
-        {/* right chair */}
-        <path d="M270 130 C 270 70, 340 70, 340 130" />
-        <path d="M278 130 C 278 80, 332 80, 332 130" />
-        <ellipse cx="305" cy="148" rx="40" ry="8" />
-        <path d="M275 152 L 260 230" />
-        <path d="M335 152 L 350 230" />
-        <path d="M298 156 L 290 240" />
-        <path d="M312 156 L 320 240" />
-        <path d="M255 232 L 355 232" />
-      </svg>
-      <Sparkle size={14} className="absolute top-2 right-10 text-crema" />
-      <Sparkle size={10} className="absolute bottom-4 left-8 text-crema" rotate={30} />
-      <Sparkle size={12} className="absolute top-10 left-[42%] text-crema/80" rotate={20} />
-    </motion.div>
+      <div
+        ref={dialog}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reservation-title"
+        className="reservation-dialog"
+      >
+        <button
+          ref={close}
+          type="button"
+          className="reservation-close"
+          aria-label="Rezervasyonu kapat"
+          onClick={onClose}
+        >
+          ×
+        </button>
+        <p className="menu-kicker">PIZZARA’DA BULUŞALIM</p>
+        <h3 id="reservation-title">Bir masa ayıralım.</h3>
+        {state === "ok" ? (
+          <div className="reservation-success">
+            <p role="status">{msg}</p>
+            <button ref={done} className="reservation-cta" onClick={onClose}>
+              Tamam <span aria-hidden>↗</span>
+            </button>
+          </div>
+        ) : (
+          <>
+            <p className="reservation-hint">
+              Bilgilerini bırak, rezervasyonunu onaylamak için seni arayalım.
+            </p>
+            <form onSubmit={onSubmit} className="reservation-form">
+              <label>
+                Ad soyad
+                <input
+                  name="name"
+                  autoComplete="name"
+                  required
+                  minLength={2}
+                  maxLength={80}
+                />
+              </label>
+              <label>
+                Telefon
+                <input
+                  name="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  minLength={7}
+                  maxLength={30}
+                />
+              </label>
+              <div className="reservation-form-row">
+                <label>
+                  Tarih ve saat
+                  <input name="date" type="datetime-local" required />
+                </label>
+                <label>
+                  Kişi sayısı
+                  <input
+                    name="guests"
+                    type="number"
+                    min={1}
+                    max={20}
+                    defaultValue={2}
+                    required
+                  />
+                </label>
+              </div>
+              <label>
+                Not <span>(isteğe bağlı)</span>
+                <input name="note" maxLength={500} />
+              </label>
+              <button
+                className="reservation-cta"
+                type="submit"
+                disabled={state === "sending"}
+              >
+                {state === "sending"
+                  ? "Gönderiliyor…"
+                  : "Rezervasyon talebi gönder"}
+                <span aria-hidden>↗</span>
+              </button>
+              {msg && (
+                <p className="reservation-error" role="alert">
+                  {msg}
+                </p>
+              )}
+            </form>
+          </>
+        )}
+      </div>
+    </div>
   );
 }

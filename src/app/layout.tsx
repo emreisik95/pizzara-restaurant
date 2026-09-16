@@ -35,18 +35,27 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#1e1410",
+  themeColor: "#ce352b",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const theme = readTheme();
   return (
-    <html lang="tr" className={`${display.variable} ${serif.variable} ${body.variable}`}>
+    <html
+      lang="tr"
+      className={`${display.variable} ${serif.variable} ${body.variable}`}
+    >
       <head>
         <style dangerouslySetInnerHTML={{ __html: themeCss(theme) }} />
       </head>
       <body className="min-h-screen">
-        <a href="#main-content" className="skip-link">İçeriğe geç</a>
+        <a href="#main-content" className="skip-link">
+          İçeriğe geç
+        </a>
         {children}
       </body>
     </html>
