@@ -616,7 +616,7 @@ button:focus-visible {
 .menu-item-photo {
   width: 82px;
   height: 82px;
-  border-radius: 8px !important;
+  border-radius: 50% !important;
 }
 .menu-item-photo .plate-img {
   padding: 4px;
